@@ -11,4 +11,8 @@
     <ProjectReference Include="..\Helpers\Helpers\Helpers.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Access\BD\" />
+  </ItemGroup>
+
 </Project>
