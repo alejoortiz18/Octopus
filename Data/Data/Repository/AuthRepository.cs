@@ -27,6 +27,14 @@ namespace Data.Repository
             return null;
         }
 
+        public async Task<Usuario> CrearUsuarioAsync(Usuario usuario)
+        {
+            _context.Usuarios.Add(usuario);
+            await _context.SaveChangesAsync();
+            return usuario;
+        }
+
+
         //public bool UsuarioIsValid(UserResetDto user)
         //{
         //    var perfil = _context.Perfils.Where(p => p.Nombre == user.TypePerfil).FirstOrDefault();

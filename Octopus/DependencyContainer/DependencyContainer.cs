@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Data.Dependences;
 using Business.Dependences;
+using Helpers.Dependences;
 
 namespace Octopus.DependencyContainer
 {
@@ -9,8 +10,8 @@ namespace Octopus.DependencyContainer
         public static IServiceCollection DependencyInjection(this IServiceCollection services)
         {
             services.DataDependencyInjectionAccess();
+            services.HelperDependencyInjectionAccess();
             services.BusinessDependencyInjectionAccess();
-            //services.HelperDependencyInjectionAccess();
 
             services.AddCors(options =>
             {

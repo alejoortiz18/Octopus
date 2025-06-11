@@ -12,6 +12,8 @@ namespace Data.Interfaces
     {
         Task<Usuario?> LoginAsync(LoginDto user);
 
+        Task<Usuario> CrearUsuarioAsync(Usuario usuario);
+
         //bool UsuarioIsValid(UserResetDto user);
         //bool CodigoIsValid(UserCod cod);
         //bool ChangePassword(UserCod user);

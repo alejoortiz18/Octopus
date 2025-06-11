@@ -134,6 +134,8 @@ namespace Octopus.Controllers
                 Bloqueado = false
                 // Otros campos requeridos por la tabla
             };
+
+
             return RedirectToAction("InicioSesion");
         }
 

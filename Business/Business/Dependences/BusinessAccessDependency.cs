@@ -1,7 +1,10 @@
-﻿
+﻿using Business.AuthBusiness;
 using Business.Interfaces;
+using Data.Interfaces;
+using Data.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using perfil = Business.AuthBusiness;
+
 
 namespace Business.Dependences
 {
@@ -13,14 +16,14 @@ namespace Business.Dependences
             #region [ Repository Data Access ]
 
             services.AddScoped<IAuthBusiness, perfil.AuthBusiness>();
-            
-            //services.AddScoped<ISesionBusiness, SesionBusiness>();
-            //services.AddScoped<ISerieBusiness, SerieBusiness>();
-            //services.AddScoped<IUsuarioBusiness, UsuarioBusiness>();
-            //services.AddScoped<INadadorXEntrenadorBusiness, NadadorXEntrenadorBusiness>();
-            //services.AddScoped<IUsuarioXSesionBusiness, UsuarioXSesionBusiness>();
-            //services.AddScoped<ITipoEntrenamientoBusiness, TipoEntrenamientoBusiness>();
-            //services.AddScoped<IPerfilBusiness, perfil.PerfilBusiness>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            // services.AddScoped<ISerieBusiness, SerieBusiness>();
+            // services.AddScoped<IUsuarioBusiness, UsuarioBusiness>();
+            // services.AddScoped<INadadorXEntrenadorBusiness, NadadorXEntrenadorBusiness>();
+            // services.AddScoped<IUsuarioXSesionBusiness, UsuarioXSesionBusiness>();
+            // services.AddScoped<ITipoEntrenamientoBusiness, TipoEntrenamientoBusiness>();
+            // services.AddScoped<IPerfilBusiness, perfil.PerfilBusiness>();
             //
             #endregion
 
