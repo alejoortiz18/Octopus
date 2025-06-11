@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using Business.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Models.Dto.Auth;
-
-
+using Helpers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Models.Dto.Auth;
+using Models.Entities.Domain.DBOctopus.OctopusEntities;
 using System.Security.Claims;
 
 namespace Octopus.Controllers
@@ -16,8 +17,6 @@ namespace Octopus.Controllers
 
         private readonly IAuthBusiness _authService;
        // private readonly IMapper _mapper;
-
-
 
         public AuthController(IAuthBusiness authService/*, IMapper mapper*/)
         {
@@ -104,6 +103,41 @@ namespace Octopus.Controllers
 
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult SignUp(SignUpDto signUp)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Devuelve la vista con el modelo para que se muestren los errores de validación
+                return View(signUp);
+            }
+
+            var (hash, salt) = PasswordHelper.CrearHash(signUp.Password);
+
+            var usuario = new Usuario
+            {
+                NombreCompleto = signUp.Username,
+                Email = signUp.Email,
+                ContrasenaHash = hash,
+                ContrasenaSalt = salt,
+                FechaRegistro = DateTime.Now,
+                EstadoUsuarioId = 1, 
+                CambioContrasena = false,
+                Bloqueado = false
+                // Otros campos requeridos por la tabla
+            };
+            return RedirectToAction("InicioSesion");
+        }
+
+
         //[HttpGet]
         //[AllowAnonymous]
         //public IActionResult ResetPassword()
@@ -166,7 +200,7 @@ namespace Octopus.Controllers
         //                                : "Error al enviar código";
 
         //    ViewData["DatoDto"] = datoDto;
-        //    return View();
+            //return View();
         //}
 
     }
