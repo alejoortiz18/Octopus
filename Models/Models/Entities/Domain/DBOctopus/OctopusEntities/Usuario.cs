@@ -9,21 +9,21 @@ public partial class Usuario
 
     public int? ReferenteId { get; set; }
 
-    public int BancoId { get; set; }
+    public int? BancoId { get; set; }
 
-    public int RolId { get; set; }
+    public int? RolId { get; set; }
 
     public int EstadoUsuarioId { get; set; }
 
-    public int TipoDocumentoId { get; set; }
+    public int? TipoDocumentoId { get; set; }
 
-    public int TipoCuentaBancariaId { get; set; }
+    public int? TipoCuentaBancariaId { get; set; }
 
-    public string CodigoReferencia { get; set; } = null!;
+    public string? CodigoReferencia { get; set; }
 
     public string NombreCompleto { get; set; } = null!;
 
-    public string NumeroDocumento { get; set; } = null!;
+    public string? NumeroDocumento { get; set; }
 
     public string Email { get; set; } = null!;
 
@@ -31,9 +31,9 @@ public partial class Usuario
 
     public byte[] ContrasenaSalt { get; set; } = null!;
 
-    public string NumeroCelular { get; set; } = null!;
+    public string? NumeroCelular { get; set; }
 
-    public string NumeroCuentaBancaria { get; set; } = null!;
+    public string? NumeroCuentaBancaria { get; set; }
 
     public DateTime FechaRegistro { get; set; }
 
@@ -53,7 +53,7 @@ public partial class Usuario
 
     public virtual ICollection<BackupRegistro> BackupRegistros { get; set; } = new List<BackupRegistro>();
 
-    public virtual Banco Banco { get; set; } = null!;
+    public virtual Banco? Banco { get; set; }
 
     public virtual ICollection<Comision> ComisionReferidos { get; set; } = new List<Comision>();
 
@@ -81,11 +81,11 @@ public partial class Usuario
 
     public virtual ICollection<Reporte> Reportes { get; set; } = new List<Reporte>();
 
-    public virtual Rol Rol { get; set; } = null!;
+    public virtual Rol? Rol { get; set; }
 
     public virtual ICollection<Sesion> Sesions { get; set; } = new List<Sesion>();
 
-    public virtual TipoCuentaBancarium TipoCuentaBancaria { get; set; } = null!;
+    public virtual TipoCuentaBancarium? TipoCuentaBancaria { get; set; }
 
-    public virtual TipoDocumento TipoDocumento { get; set; } = null!;
+    public virtual TipoDocumento? TipoDocumento { get; set; }
 }

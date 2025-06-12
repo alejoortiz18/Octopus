@@ -12,8 +12,8 @@ namespace Data.Repository
 {
     public class AuthRepository : IAuthRepository
     {
-        private readonly OctopusDbContext _context;
-        public AuthRepository(OctopusDbContext context)
+        private readonly AppDbContext _context;
+        public AuthRepository(AppDbContext context)
         {
             _context = context;
         }

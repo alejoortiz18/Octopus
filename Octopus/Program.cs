@@ -47,4 +47,4 @@ app.MapControllerRoute(
     pattern: "{controller=Auth}/{action=InicioSesion}/{id?}");
 
 app.Run();
-//dotnet ef dbcontext scaffold "Server=DESKALEJO\SQLEXPRESS;Database=Octopus;Trusted_Connection=True;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -o Entities/Domain/DBTraining/TraininEntities --context AppDbContext --force --project "E:\\empresas\\Personales\\Red de mercadeo\\Proyecto\\Octopus\\Octopus\\Models\\Models\\Models.csproj"
+//dotnet ef dbcontext scaffold "Server=DESKALEJO\SQLEXPRESS;Database=Octopus;Trusted_Connection=True;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -o Entities/Domain/DBOctopus/OctopusEntities --context AppDbContext --force --project "E:\\empresas\\Personales\\Red de mercadeo\\Proyecto\\Octopus\\Octopus\\Models\\Models\\Models.csproj"

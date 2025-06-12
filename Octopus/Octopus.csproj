@@ -16,14 +16,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Business\Business\Business.csproj" />
-    <ProjectReference Include="..\Data\Data\Data.csproj" />
-    <ProjectReference Include="..\Helpers\Helpers\Helpers.csproj" />
-    <ProjectReference Include="..\Models\Models\Models.csproj" />
+    <Folder Include="wwwroot\assets\Images\Logos\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\assets\Images\Logos\" />
+    <ProjectReference Include="..\Business\Business\Business.csproj" />
+    <ProjectReference Include="..\Constant\Constant\Constant.csproj" />
+    <ProjectReference Include="..\Data\Data\Data.csproj" />
+    <ProjectReference Include="..\Helpers\Helpers\Helpers.csproj" />
+    <ProjectReference Include="..\Models\Models\Models.csproj" />
   </ItemGroup>
 
 </Project>

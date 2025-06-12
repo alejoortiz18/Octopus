@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Models.Entities.Domain.DBOctopus.OctopusEntities;
 
-public partial class OctopusDbContext : DbContext
+public partial class AppDbContext : DbContext
 {
-    public OctopusDbContext()
+    public AppDbContext()
     {
     }
 
-    public OctopusDbContext(DbContextOptions<OctopusDbContext> options)
+    public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
     }
@@ -518,7 +518,6 @@ public partial class OctopusDbContext : DbContext
 
             entity.HasOne(d => d.Banco).WithMany(p => p.Usuarios)
                 .HasForeignKey(d => d.BancoId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Usuario__BancoID__4CA06362");
 
             entity.HasOne(d => d.EstadoUsuario).WithMany(p => p.Usuarios)
@@ -532,17 +531,14 @@ public partial class OctopusDbContext : DbContext
 
             entity.HasOne(d => d.Rol).WithMany(p => p.Usuarios)
                 .HasForeignKey(d => d.RolId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Usuario__RolID__4E88ABD4");
 
             entity.HasOne(d => d.TipoCuentaBancaria).WithMany(p => p.Usuarios)
                 .HasForeignKey(d => d.TipoCuentaBancariaId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Usuario__TipoCue__4BAC3F29");
 
             entity.HasOne(d => d.TipoDocumento).WithMany(p => p.Usuarios)
                 .HasForeignKey(d => d.TipoDocumentoId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Usuario__TipoDoc__4AB81AF0");
         });
 

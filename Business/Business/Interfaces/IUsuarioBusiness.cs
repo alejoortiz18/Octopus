@@ -1,0 +1,14 @@
+﻿using Models.Entities.Domain.DBOctopus.OctopusEntities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Business.Interfaces
+{
+    public interface IUsuarioBusiness
+    {
+        bool Save(Usuario user);
+    }
+}

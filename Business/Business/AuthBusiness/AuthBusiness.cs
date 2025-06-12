@@ -79,6 +79,7 @@ namespace Business.AuthBusiness
                 ContrasenaSalt = salt,
                 FechaRegistro = DateTime.UtcNow,
                 EstadoUsuarioId = 1, 
+                TipoDocumentoId = 1
                 // Agrega más campos si es necesario
             };
 

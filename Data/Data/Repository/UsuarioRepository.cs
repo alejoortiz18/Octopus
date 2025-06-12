@@ -11,8 +11,8 @@ namespace Data.Repository
 {
     public class UsuarioRepository : IUsuarioRepository
     {
-        private readonly OctopusDbContext _context;
-        public UsuarioRepository(OctopusDbContext context)
+        private readonly AppDbContext _context;
+        public UsuarioRepository(AppDbContext context)
         {
             _context = context;
         }
@@ -25,8 +25,17 @@ namespace Data.Repository
 
         public bool Save(Usuario user)
         {
-            _context.Usuarios.Add(user);
-            return _context.SaveChanges() > 0;
+            try
+            {
+                var result = _context.Usuarios.Add(user);
+                var saveresult = _context.SaveChanges() > 0;
+                return saveresult;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            
         }
 
 

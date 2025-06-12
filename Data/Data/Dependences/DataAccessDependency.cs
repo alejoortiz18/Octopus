@@ -26,7 +26,7 @@ namespace Data.Dependences
 
 
             #region [General]
-            services.AddScoped<OctopusDbContext>();
+            services.AddScoped<AppDbContext>();
             #endregion
 
             return services;

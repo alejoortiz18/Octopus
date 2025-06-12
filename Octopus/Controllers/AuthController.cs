@@ -15,12 +15,12 @@ namespace Octopus.Controllers
     public class AuthController : Controller
     {
 
-        private readonly IAuthBusiness _authService;
+        private readonly IAuthBusiness _authBusiness;
        // private readonly IMapper _mapper;
 
         public AuthController(IAuthBusiness authService/*, IMapper mapper*/)
         {
-            _authService = authService;
+            _authBusiness = authService;
             //_mapper = mapper;
         }
 
@@ -66,7 +66,7 @@ namespace Octopus.Controllers
 
                 //Task<Usuario> loginExitosoTask = new Task<Usuario>();
 
-                //// var loginExitoso = _authService.InicioSesionAsync(loginDto).Result;
+                //// var loginExitoso = _authBusiness.InicioSesionAsync(loginDto).Result;
 
                 //// if (loginExitoso != null)
                 //if (true )
@@ -120,21 +120,9 @@ namespace Octopus.Controllers
                 return View(signUp);
             }
 
-            var (hash, salt) = PasswordHelper.CrearHash(signUp.Password);
-
-            var usuario = new Usuario
-            {
-                NombreCompleto = signUp.Username,
-                Email = signUp.Email,
-                ContrasenaHash = hash,
-                ContrasenaSalt = salt,
-                FechaRegistro = DateTime.Now,
-                EstadoUsuarioId = 1, 
-                CambioContrasena = false,
-                Bloqueado = false
-                // Otros campos requeridos por la tabla
-            };
-
+           
+           
+            _authBusiness.SignUpAsync(signUp);
 
             return RedirectToAction("InicioSesion");
         }
@@ -170,7 +158,7 @@ namespace Octopus.Controllers
         //        CodigoActivo = false
         //    };
 
-        //    bool result = _authService.ChangePassword(userCod);
+        //    bool result = _authBusiness.ChangePassword(userCod);
 
         //    if (!result)
         //    {
@@ -193,7 +181,7 @@ namespace Octopus.Controllers
         //public async Task<IActionResult> ResetPassword(string username)
         //{
 
-        //    var resultado = await _authService.GenerarCodigoRestablecimientoAsync(username);
+        //    var resultado = await _authBusiness.GenerarCodigoRestablecimientoAsync(username);
         //    ResetPasswordDto datoDto = new ResetPasswordDto();
 
         //    datoDto.Email = resultado ? username : null;
