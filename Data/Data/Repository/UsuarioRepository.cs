@@ -27,6 +27,7 @@ namespace Data.Repository
         {
             try
             {
+
                 var result = _context.Usuarios.Add(user);
                 var saveresult = _context.SaveChanges() > 0;
                 return saveresult;

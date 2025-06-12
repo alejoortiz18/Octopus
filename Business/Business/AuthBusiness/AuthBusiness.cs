@@ -1,6 +1,7 @@
 ﻿using Business.Interfaces;
 using Constant;
 using Data.Interfaces;
+using Helpers.Interfaces;
 using Models.Dto.Auth;
 using Models.Entities.Domain.DBOctopus.OctopusEntities;
 using System;
@@ -16,11 +17,12 @@ namespace Business.AuthBusiness
         private readonly IUsuarioRepository _usuarioRepository;
        // private readonly IEmailHelper _emailHelper;
         private readonly IAuthRepository _authRepository;
+        private readonly IEmailHelper _emailHelper;
 
-        public AuthBusiness(IUsuarioRepository usuarioRepository, /*IEmailHelper emailHelper,*/ IAuthRepository authRepository)
+        public AuthBusiness(IUsuarioRepository usuarioRepository, IEmailHelper emailHelper, IAuthRepository authRepository)
         {
             _usuarioRepository = usuarioRepository;
-            //_emailHelper = emailHelper;
+            _emailHelper = emailHelper;
             _authRepository = authRepository;
         }
 
@@ -64,14 +66,14 @@ namespace Business.AuthBusiness
             var existingUser = _usuarioRepository.ObtenerPorEmail(signUpDto.Email);
             if (existingUser != null)
             {
-                return (false, UsuarioMsn.CorreoExiste);
+                return (false, UsuarioMsnConstant.CorreoExiste);
             }
 
             // Generar Salt y Hash
             CrearHashConSalt(signUpDto.Password, out byte[] hash, out byte[] salt);
 
             // Crear entidad de usuario
-            var usuario = new Usuario
+            Usuario usuario = new Usuario
             {
                 NombreCompleto = signUpDto.Username,
                 Email = signUpDto.Email,
@@ -79,13 +81,17 @@ namespace Business.AuthBusiness
                 ContrasenaSalt = salt,
                 FechaRegistro = DateTime.UtcNow,
                 EstadoUsuarioId = 1, 
-                TipoDocumentoId = 1
+                TipoDocumentoId = 1,
+                RolId = 1
                 // Agrega más campos si es necesario
             };
 
             // Insertar en base de datos
             bool resultSave = _usuarioRepository.Save(usuario);
-            
+            if (resultSave)
+            {
+                _emailHelper.EnviarCorreoCrearUsuarioNuevoAsync(usuario, EmailConstant.AsuntoUsuarioNuevo,EmailConstant.CuerpoCreateUsuario);
+            }
 
             return (true, null);
         }

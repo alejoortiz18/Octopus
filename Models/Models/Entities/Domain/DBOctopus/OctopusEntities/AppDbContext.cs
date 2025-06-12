@@ -63,7 +63,7 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<BackupRegistro>(entity =>
         {
-            entity.HasKey(e => e.BackupId).HasName("PK__BackupRe__EB9069E281B97C2E");
+            entity.HasKey(e => e.BackupId).HasName("PK__BackupRe__EB9069E2E5576FD9");
 
             entity.ToTable("BackupRegistro");
 
@@ -71,9 +71,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Estado)
                 .HasMaxLength(20)
                 .IsUnicode(false);
-            entity.Property(e => e.FechaBackup)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+            entity.Property(e => e.FechaBackup).HasColumnType("datetime");
             entity.Property(e => e.NombreArchivo)
                 .HasMaxLength(100)
                 .IsUnicode(false);
@@ -88,17 +86,16 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Usuario).WithMany(p => p.BackupRegistros)
                 .HasForeignKey(d => d.UsuarioId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BackupReg__Usuar__7E37BEF6");
+                .HasConstraintName("FK_BackupRegistro_Usuario");
         });
 
         modelBuilder.Entity<Banco>(entity =>
         {
-            entity.HasKey(e => e.BancoId).HasName("PK__Banco__4A8BAC15F5081EF0");
+            entity.HasKey(e => e.BancoId).HasName("PK__Banco__4A8BAC15808CB759");
 
             entity.ToTable("Banco");
 
             entity.Property(e => e.BancoId).HasColumnName("BancoID");
-            entity.Property(e => e.Activo).HasDefaultValue(true);
             entity.Property(e => e.Codigo)
                 .HasMaxLength(20)
                 .IsUnicode(false);
@@ -109,23 +106,13 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Comision>(entity =>
         {
-            entity.HasKey(e => e.ComisionId).HasName("PK__Comision__A014A712D11646D7");
+            entity.HasKey(e => e.ComisionId).HasName("PK__Comision__A014A7120CCFDB5B");
 
             entity.ToTable("Comision");
 
-            entity.HasIndex(e => e.EstadoPagoId, "idx_Comision_Estado");
-
-            entity.HasIndex(e => e.FechaGeneracion, "idx_Comision_Fecha");
-
-            entity.HasIndex(e => e.ReferidoId, "idx_Comision_ReferidoID");
-
-            entity.HasIndex(e => e.UsuarioId, "idx_Comision_UsuarioID");
-
             entity.Property(e => e.ComisionId).HasColumnName("ComisionID");
             entity.Property(e => e.EstadoPagoId).HasColumnName("EstadoPagoID");
-            entity.Property(e => e.FechaGeneracion)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+            entity.Property(e => e.FechaGeneracion).HasColumnType("datetime");
             entity.Property(e => e.FechaPago).HasColumnType("datetime");
             entity.Property(e => e.Monto).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.ReferidoId).HasColumnName("ReferidoID");
@@ -134,26 +121,26 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.EstadoPago).WithMany(p => p.Comisions)
                 .HasForeignKey(d => d.EstadoPagoId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Comision__Estado__619B8048");
+                .HasConstraintName("FK_Comision_EstadoPago");
 
             entity.HasOne(d => d.Referido).WithMany(p => p.ComisionReferidos)
                 .HasForeignKey(d => d.ReferidoId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Comision__Referi__60A75C0F");
+                .HasConstraintName("FK_Comision_Usuario1");
 
             entity.HasOne(d => d.Usuario).WithMany(p => p.ComisionUsuarios)
                 .HasForeignKey(d => d.UsuarioId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Comision__Usuari__5FB337D6");
+                .HasConstraintName("FK_Comision_Usuario");
         });
 
         modelBuilder.Entity<ConfiguracionSistema>(entity =>
         {
-            entity.HasKey(e => e.ConfiguracionId).HasName("PK__Configur__9B95E0569473C1C2");
+            entity.HasKey(e => e.ConfiguracionId).HasName("PK__Configur__9B95E056C9EEF648");
 
             entity.ToTable("ConfiguracionSistema");
 
-            entity.HasIndex(e => e.Clave, "UQ__Configur__E8181E11305558A4").IsUnique();
+            entity.HasIndex(e => e.Clave, "UQ__Configur__E8181E112FB06DF8").IsUnique();
 
             entity.Property(e => e.ConfiguracionId).HasColumnName("ConfiguracionID");
             entity.Property(e => e.Clave)
@@ -162,7 +149,6 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Descripcion)
                 .HasMaxLength(200)
                 .IsUnicode(false);
-            entity.Property(e => e.Modificable).HasDefaultValue(true);
             entity.Property(e => e.Valor)
                 .HasMaxLength(200)
                 .IsUnicode(false);
@@ -170,7 +156,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<EstadoPago>(entity =>
         {
-            entity.HasKey(e => e.EstadoPagoId).HasName("PK__EstadoPa__63AD30BD3C35980B");
+            entity.HasKey(e => e.EstadoPagoId).HasName("PK__EstadoPa__63AD30BDA06631C0");
 
             entity.ToTable("EstadoPago");
 
@@ -185,7 +171,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<EstadoUsuario>(entity =>
         {
-            entity.HasKey(e => e.EstadoUsuarioId).HasName("PK__EstadoUs__BAA0F882C6B73FEE");
+            entity.HasKey(e => e.EstadoUsuarioId).HasName("PK__EstadoUs__BAA0F882D693DE64");
 
             entity.ToTable("EstadoUsuario");
 
@@ -200,27 +186,25 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<HistorialContrasena>(entity =>
         {
-            entity.HasKey(e => e.HistorialContrasenaId).HasName("PK__Historia__DD19B6F5BD823744");
+            entity.HasKey(e => e.HistorialContrasenaId).HasName("PK__Historia__DD19B6F59F244290");
 
             entity.ToTable("HistorialContrasena");
 
             entity.Property(e => e.HistorialContrasenaId).HasColumnName("HistorialContrasenaID");
             entity.Property(e => e.ContrasenaHash).HasMaxLength(256);
             entity.Property(e => e.ContrasenaSalt).HasMaxLength(256);
-            entity.Property(e => e.FechaCambio)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+            entity.Property(e => e.FechaCambio).HasColumnType("datetime");
             entity.Property(e => e.UsuarioId).HasColumnName("UsuarioID");
 
             entity.HasOne(d => d.Usuario).WithMany(p => p.HistorialContrasenas)
                 .HasForeignKey(d => d.UsuarioId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Historial__Usuar__6A30C649");
+                .HasConstraintName("FK_HistorialContrasena_Usuario");
         });
 
         modelBuilder.Entity<LogActividad>(entity =>
         {
-            entity.HasKey(e => e.LogId).HasName("PK__LogActiv__5E5499A81ACFE7A7");
+            entity.HasKey(e => e.LogId).HasName("PK__LogActiv__5E5499A83D8C0CCD");
 
             entity.ToTable("LogActividad");
 
@@ -242,25 +226,17 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Usuario).WithMany(p => p.LogActividads)
                 .HasForeignKey(d => d.UsuarioId)
-                .HasConstraintName("FK__LogActivi__Usuar__71D1E811");
+                .HasConstraintName("FK_LogActividad_Usuario");
         });
 
         modelBuilder.Entity<Notificacion>(entity =>
         {
-            entity.HasKey(e => e.NotificacionId).HasName("PK__Notifica__BCC120C472827D74");
+            entity.HasKey(e => e.NotificacionId).HasName("PK__Notifica__BCC120C41EB5306B");
 
             entity.ToTable("Notificacion");
 
-            entity.HasIndex(e => e.Leida, "idx_Notificacion_Leida");
-
-            entity.HasIndex(e => e.TipoNotificacion, "idx_Notificacion_Tipo");
-
-            entity.HasIndex(e => e.UsuarioId, "idx_Notificacion_UsuarioID");
-
             entity.Property(e => e.NotificacionId).HasColumnName("NotificacionID");
-            entity.Property(e => e.FechaCreacion)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+            entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
             entity.Property(e => e.FechaLectura).HasColumnType("datetime");
             entity.Property(e => e.Mensaje)
                 .HasMaxLength(500)
@@ -276,20 +252,14 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Usuario).WithMany(p => p.Notificacions)
                 .HasForeignKey(d => d.UsuarioId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Notificac__Usuar__66603565");
+                .HasConstraintName("FK_Notificacion_Usuario");
         });
 
         modelBuilder.Entity<Pago>(entity =>
         {
-            entity.HasKey(e => e.PagoId).HasName("PK__Pago__F00B615884A93C82");
+            entity.HasKey(e => e.PagoId).HasName("PK__Pago__F00B6158D6EE5F86");
 
             entity.ToTable("Pago");
-
-            entity.HasIndex(e => e.EstadoPagoId, "idx_Pago_Estado");
-
-            entity.HasIndex(e => e.FechaPago, "idx_Pago_Fecha");
-
-            entity.HasIndex(e => e.UsuarioId, "idx_Pago_UsuarioID");
 
             entity.Property(e => e.PagoId).HasColumnName("PagoID");
             entity.Property(e => e.Comprobante)
@@ -297,61 +267,47 @@ public partial class AppDbContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.EstadoPagoId).HasColumnName("EstadoPagoID");
             entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
-            entity.Property(e => e.FechaPago)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+            entity.Property(e => e.FechaPago).HasColumnType("datetime");
             entity.Property(e => e.Monto).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.Observaciones)
                 .HasMaxLength(200)
                 .IsUnicode(false);
             entity.Property(e => e.UsuarioId).HasColumnName("UsuarioID");
 
-            entity.HasOne(d => d.AprobadoPorNavigation).WithMany(p => p.PagoAprobadoPorNavigations)
-                .HasForeignKey(d => d.AprobadoPor)
-                .HasConstraintName("FK__Pago__AprobadoPo__5BE2A6F2");
-
             entity.HasOne(d => d.EstadoPago).WithMany(p => p.Pagos)
                 .HasForeignKey(d => d.EstadoPagoId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Pago__EstadoPago__5AEE82B9");
+                .HasConstraintName("FK_Pago_EstadoPago");
 
-            entity.HasOne(d => d.Usuario).WithMany(p => p.PagoUsuarios)
+            entity.HasOne(d => d.Usuario).WithMany(p => p.Pagos)
                 .HasForeignKey(d => d.UsuarioId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Pago__UsuarioID__59FA5E80");
+                .HasConstraintName("FK_Pago_Usuario");
         });
 
         modelBuilder.Entity<RedReferido>(entity =>
         {
-            entity.HasKey(e => e.RedReferidosId).HasName("PK__RedRefer__201311684EAF4493");
-
-            entity.HasIndex(e => e.Nivel, "idx_RedReferidos_Nivel");
-
-            entity.HasIndex(e => e.ReferenteId, "idx_RedReferidos_ReferenteID");
-
-            entity.HasIndex(e => e.UsuarioId, "idx_RedReferidos_UsuarioID");
+            entity.HasKey(e => e.RedReferidosId).HasName("PK__RedRefer__201311682C415EC5");
 
             entity.Property(e => e.RedReferidosId).HasColumnName("RedReferidosID");
-            entity.Property(e => e.FechaVinculacion)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+            entity.Property(e => e.FechaVinculacion).HasColumnType("datetime");
             entity.Property(e => e.ReferenteId).HasColumnName("ReferenteID");
             entity.Property(e => e.UsuarioId).HasColumnName("UsuarioID");
 
             entity.HasOne(d => d.Referente).WithMany(p => p.RedReferidoReferentes)
                 .HasForeignKey(d => d.ReferenteId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RedReferi__Refer__5441852A");
+                .HasConstraintName("FK_RedReferidos_Usuario");
 
             entity.HasOne(d => d.Usuario).WithMany(p => p.RedReferidoUsuarios)
                 .HasForeignKey(d => d.UsuarioId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RedReferi__Usuar__534D60F1");
+                .HasConstraintName("FK_RedReferidos_Usuario1");
         });
 
         modelBuilder.Entity<Reporte>(entity =>
         {
-            entity.HasKey(e => e.ReporteId).HasName("PK__Reporte__0B29EA4ED46BAE54");
+            entity.HasKey(e => e.ReporteId).HasName("PK__Reporte__0B29EA4E742094A4");
 
             entity.ToTable("Reporte");
 
@@ -359,9 +315,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Descripcion)
                 .HasMaxLength(200)
                 .IsUnicode(false);
-            entity.Property(e => e.FechaCreacion)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+            entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(100)
                 .IsUnicode(false);
@@ -375,12 +329,12 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.CreadoPorNavigation).WithMany(p => p.Reportes)
                 .HasForeignKey(d => d.CreadoPor)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Reporte__CreadoP__75A278F5");
+                .HasConstraintName("FK_Reporte_Usuario");
         });
 
         modelBuilder.Entity<Rol>(entity =>
         {
-            entity.HasKey(e => e.RolId).HasName("PK__Rol__F92302D1F0E9A9AF");
+            entity.HasKey(e => e.RolId).HasName("PK__Rol__F92302D1AE3C2F86");
 
             entity.ToTable("Rol");
 
@@ -395,12 +349,11 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Sesion>(entity =>
         {
-            entity.HasKey(e => e.SesionId).HasName("PK__Sesion__52FD7C060F25BEC4");
+            entity.HasKey(e => e.SesionId).HasName("PK__Sesion__52FD7C06C0FBD50E");
 
             entity.ToTable("Sesion");
 
             entity.Property(e => e.SesionId).HasColumnName("SesionID");
-            entity.Property(e => e.Activa).HasDefaultValue(true);
             entity.Property(e => e.DireccionIp)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -409,9 +362,7 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.FechaExpiracion).HasColumnType("datetime");
-            entity.Property(e => e.FechaInicio)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+            entity.Property(e => e.FechaInicio).HasColumnType("datetime");
             entity.Property(e => e.Token)
                 .HasMaxLength(500)
                 .IsUnicode(false);
@@ -420,12 +371,12 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Usuario).WithMany(p => p.Sesions)
                 .HasForeignKey(d => d.UsuarioId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Sesion__UsuarioI__7A672E12");
+                .HasConstraintName("FK_Sesion_Usuario");
         });
 
         modelBuilder.Entity<TipoCuentaBancarium>(entity =>
         {
-            entity.HasKey(e => e.TipoCuentaBancariaId).HasName("PK__TipoCuen__F11492A19D7BAAFA");
+            entity.HasKey(e => e.TipoCuentaBancariaId).HasName("PK__TipoCuen__F11492A1232B6249");
 
             entity.Property(e => e.TipoCuentaBancariaId).HasColumnName("TipoCuentaBancariaID");
             entity.Property(e => e.Descripcion)
@@ -438,7 +389,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<TipoDocumento>(entity =>
         {
-            entity.HasKey(e => e.TipoDocumentoId).HasName("PK__TipoDocu__A329EAA789A75E61");
+            entity.HasKey(e => e.TipoDocumentoId).HasName("PK__TipoDocu__A329EAA7B273A7E7");
 
             entity.ToTable("TipoDocumento");
 
@@ -463,19 +414,10 @@ public partial class AppDbContext : DbContext
 
             entity.HasIndex(e => e.Email, "UQ__Usuario__A9D1053447D241C3").IsUnique();
 
-            entity.HasIndex(e => e.CodigoReferencia, "idx_Usuario_CodigoReferencia");
-
-            entity.HasIndex(e => e.Email, "idx_Usuario_Email");
-
-            entity.HasIndex(e => e.EstadoUsuarioId, "idx_Usuario_Estado");
-
-            entity.HasIndex(e => e.NumeroDocumento, "idx_Usuario_NumeroDocumento");
-
-            entity.HasIndex(e => e.ReferenteId, "idx_Usuario_ReferenteID");
-
             entity.Property(e => e.UsuarioId).HasColumnName("UsuarioID");
             entity.Property(e => e.BancoId).HasColumnName("BancoID");
             entity.Property(e => e.Bloqueado).HasDefaultValue(false);
+            entity.Property(e => e.CambioContrasena).HasDefaultValue(false);
             entity.Property(e => e.CodigoReferencia)
                 .HasMaxLength(20)
                 .IsUnicode(false);
@@ -531,6 +473,7 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Rol).WithMany(p => p.Usuarios)
                 .HasForeignKey(d => d.RolId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Usuario__RolID__4E88ABD4");
 
             entity.HasOne(d => d.TipoCuentaBancaria).WithMany(p => p.Usuarios)
@@ -539,6 +482,7 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.TipoDocumento).WithMany(p => p.Usuarios)
                 .HasForeignKey(d => d.TipoDocumentoId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Usuario__TipoDoc__4AB81AF0");
         });
 

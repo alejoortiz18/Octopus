@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Constant\Constant\Constant.csproj" />
     <ProjectReference Include="..\..\Models\Models\Models.csproj" />
   </ItemGroup>
 

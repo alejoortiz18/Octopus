@@ -23,8 +23,6 @@ public partial class Pago
 
     public string? Observaciones { get; set; }
 
-    public virtual Usuario? AprobadoPorNavigation { get; set; }
-
     public virtual EstadoPago EstadoPago { get; set; } = null!;
 
     public virtual Usuario Usuario { get; set; } = null!;

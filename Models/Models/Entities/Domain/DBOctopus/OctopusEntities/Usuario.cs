@@ -11,11 +11,11 @@ public partial class Usuario
 
     public int? BancoId { get; set; }
 
-    public int? RolId { get; set; }
+    public int RolId { get; set; }
 
     public int EstadoUsuarioId { get; set; }
 
-    public int? TipoDocumentoId { get; set; }
+    public int TipoDocumentoId { get; set; }
 
     public int? TipoCuentaBancariaId { get; set; }
 
@@ -39,7 +39,7 @@ public partial class Usuario
 
     public DateTime? FechaUltimoAcceso { get; set; }
 
-    public bool CambioContrasena { get; set; }
+    public bool? CambioContrasena { get; set; }
 
     public string? TokenVerificacion { get; set; }
 
@@ -69,9 +69,7 @@ public partial class Usuario
 
     public virtual ICollection<Notificacion> Notificacions { get; set; } = new List<Notificacion>();
 
-    public virtual ICollection<Pago> PagoAprobadoPorNavigations { get; set; } = new List<Pago>();
-
-    public virtual ICollection<Pago> PagoUsuarios { get; set; } = new List<Pago>();
+    public virtual ICollection<Pago> Pagos { get; set; } = new List<Pago>();
 
     public virtual ICollection<RedReferido> RedReferidoReferentes { get; set; } = new List<RedReferido>();
 
@@ -81,11 +79,11 @@ public partial class Usuario
 
     public virtual ICollection<Reporte> Reportes { get; set; } = new List<Reporte>();
 
-    public virtual Rol? Rol { get; set; }
+    public virtual Rol Rol { get; set; } = null!;
 
     public virtual ICollection<Sesion> Sesions { get; set; } = new List<Sesion>();
 
     public virtual TipoCuentaBancarium? TipoCuentaBancaria { get; set; }
 
-    public virtual TipoDocumento? TipoDocumento { get; set; }
+    public virtual TipoDocumento TipoDocumento { get; set; } = null!;
 }

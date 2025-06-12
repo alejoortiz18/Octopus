@@ -1,4 +1,5 @@
-﻿using Helpers.Interfaces;
+﻿using Constant;
+using Helpers.Interfaces;
 using Models.Entities.Domain.DBOctopus.OctopusEntities;
 using System.Net.Mail;
 
@@ -20,7 +21,7 @@ namespace Helpers
             }
         }
 
-        public async Task EnviarCorreoCrearUsuarioAsync(Usuario usuario, string subject, string body)
+        public async Task EnviarCorreoCrearUsuarioNuevoAsync(Usuario usuario, string subject, string body)
         {
             try
             {
@@ -39,10 +40,10 @@ namespace Helpers
         {
             try
             {
-                string EmailOrigen = "ultraracetraining@gmail.com";
-                string Contraseña = "cpqb itsa wcrm ualn";
+                string EmailOrigen = ParametrosEmailConstant.Remitente;
+                string Contrasena = ParametrosEmailConstant.Contrasena;
 
-                string asunto = $"{subject} - UltraRaceTraining";
+                string asunto = $"{subject} - Octopus";
                 string cuerpo = body;
 
                 MailMessage oMailMessage = new MailMessage()
@@ -63,7 +64,7 @@ namespace Helpers
                     EnableSsl = true,
                     UseDefaultCredentials = false,
                     Port = 587,
-                    Credentials = new System.Net.NetworkCredential(EmailOrigen, Contraseña)
+                    Credentials = new System.Net.NetworkCredential(EmailOrigen, Contrasena)
                 };
 
                 await oSmtpClient.SendMailAsync(oMailMessage);
