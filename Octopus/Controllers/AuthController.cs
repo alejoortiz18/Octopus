@@ -1,4 +1,5 @@
 ﻿using Business.Interfaces;
+using Constant;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -60,8 +61,23 @@ namespace Octopus.Controllers
                 var loginExitoso = await _authBusiness.InicioSesionAsync(loginDto);
                 var estado = loginExitoso.estado;
                 var usuario = loginExitoso.usuario;
-
+                if (estado==0)
+                {
+                    ViewData["InicioSesion"] = InicioSesionConstant.UsuarioEstadoCero;
+                    return View();
+                }
                 if (estado == 1)
+                {
+                    ViewData["InicioSesion"] = (InicioSesionConstant.UsuarioEstadoUno);
+                    return View();
+                    //retornar un mensaje diciendo que el usuario esta desactivado
+                }
+                else if (estado == 2)
+                {
+                    ViewData["InicioSesion"] = (InicioSesionConstant.UsuarioEstadoDos);
+                    return View();
+                }
+                else if (estado == 3)
                 {
                     List<Claim> claims = new List<Claim>
                         {
@@ -93,5 +109,42 @@ namespace Octopus.Controllers
                 return View();
             }
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult SignUp(SignUpDto signUp)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Devuelve la vista con el modelo para que se muestren los errores de validación
+                return View(signUp);
+            }
+
+            var result = _authBusiness.SignUpAsync(signUp).Result;
+            var success = result.Success;
+            var errorMessage = result.ErrorMessage;
+
+            // Puedes manejar el error aquí si lo necesitas, por ejemplo:
+            if (!success)
+            {
+                ModelState.AddModelError("", errorMessage);
+                return View(signUp);
+            }
+            else
+            {
+                ViewData["EnableUser"] = "Se ha creado el usuario, verifica el correo para continuar con el registo.";
+                return View(signUp);
+            }
+
+
+        }
+
     }
 }

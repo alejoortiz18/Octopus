@@ -1,5 +1,6 @@
 ﻿@{
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    var msn = ViewData["InicioSesion"] as string;
 }
     
  <div class="page-header align-items-start min-vh-100"
@@ -25,12 +26,12 @@
                                     <label class="form-label">Password</label>
                                     <input type="password" class="form-control" id="floatingPassword" name="password" required>
                                 </div>
-                                @if (ViewBag.Mensaje != null)
+                                @if (!string.IsNullOrEmpty( msn))
                                 {
                                     <div class="d-flex align-items-center justify-content-between mb-4">
 
-                                        <span class="badge badge-secondary">
-                                            usuario o contraseña incorrecto
+                                    <span class="text-primary text-gradient font-weight-bold">
+                                        @msn
                                         </span>
                                     </div>
                                 }
@@ -41,10 +42,15 @@
                                 <div class="text-center">
                                 <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">Iniciar</button>
                                 </div>
-                                <p class="mt-4 text-sm text-center">
-                                    No tienes una cuenta?
-                                    <a asp-controller="Auth" asp-action="SignUp" class="text-primary text-gradient font-weight-bold">Crear</a>
-                                </p>
+                                <div class="d-flex justify-content-center align-items-center mt-4" style="font-size: 0.9rem;">
+                                    <a asp-controller="Auth" asp-action="SignUp" class="text-primary text-gradient font-weight-bold d-flex align-items-center me-3" style="text-decoration: none;">
+                                        <i class="fa fa-key me-1"></i> Restablecer Contraseña
+                                    </a>
+                                    <span class="mx-2 text-secondary">|</span>
+                                    <a asp-controller="Auth" asp-action="SignUp" class="text-primary text-gradient font-weight-bold d-flex align-items-center" style="text-decoration: none;">
+                                        <i class="fa fa-user-plus me-1"></i> Crear Cuenta
+                                    </a>
+                                </div>
                             </form>
 
                         </div>
