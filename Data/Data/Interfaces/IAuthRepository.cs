@@ -10,7 +10,7 @@ namespace Data.Interfaces
 {
     public interface IAuthRepository
     {
-        Task<Usuario?> LoginAsync(LoginDto user);
+        Usuario LoginAsync(string email);
 
         Task<Usuario> CrearUsuarioAsync(Usuario usuario);
 

@@ -25,7 +25,7 @@ namespace Helpers
         {
             try
             {
-                body = body.Replace("{codigo}", usuario.Email);
+                body = body.Replace("{codigo}", usuario.TokenVerificacion);
                 string cuerpo = body.Replace("{email}", usuario.Email);
                 EnviarEmailAsync(usuario.Email, subject, cuerpo);
 

@@ -38,7 +38,8 @@ namespace Constant
                     <p></p>
                     <p>Atentamente,</p>
                     <p><strong>Equipo de Octopus</strong></p>                    
-                    <p><a href='https://localhost/EnableUser/validarCodigo?codigo={{codigo}}&email={{email}}'>Establecer contraseña</a></p>
+                    <p><a href='https://localhost:7121/EnableUser/ValidarCodigo?codigo={{codigo}}&email={{email}}' 
+                        style='font-weight: bold; font-size: 14pt;'>Restablecer contraseña</a></p>
                     </p>                    
                     ";
         #endregion

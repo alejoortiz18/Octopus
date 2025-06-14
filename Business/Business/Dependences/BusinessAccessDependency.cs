@@ -1,5 +1,6 @@
 ﻿using Business.AuthBusiness;
 using Business.Interfaces;
+using Business.UsuarioBll;
 using Data.Interfaces;
 using Data.Repository;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +20,7 @@ namespace Business.Dependences
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             // services.AddScoped<ISerieBusiness, SerieBusiness>();
-            // services.AddScoped<IUsuarioBusiness, UsuarioBusiness>();
+            services.AddScoped<IUsuarioBusiness, UsuarioBusiness>();
             // services.AddScoped<INadadorXEntrenadorBusiness, NadadorXEntrenadorBusiness>();
             // services.AddScoped<IUsuarioXSesionBusiness, UsuarioXSesionBusiness>();
             // services.AddScoped<ITipoEntrenamientoBusiness, TipoEntrenamientoBusiness>();

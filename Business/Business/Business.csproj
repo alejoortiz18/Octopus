@@ -7,14 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Constant\Constant\Constant.csproj" />
     <ProjectReference Include="..\..\Data\Data\Data.csproj" />
     <ProjectReference Include="..\..\Helpers\Helpers\Helpers.csproj" />
     <ProjectReference Include="..\..\Models\Models\Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="UsuarioBll\" />
   </ItemGroup>
 
 </Project>

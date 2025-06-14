@@ -9,6 +9,14 @@ namespace Helpers
 {
     public static class PasswordHelper
     {
+        public static void CrearHashConSalt(string password, out byte[] hash, out byte[] salt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                salt = hmac.Key;
+                hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            }
+        }
         public static (byte[] Hash, byte[] Salt) CrearHash(string password)
         {
             // Generar salt aleatorio de 16 bytes

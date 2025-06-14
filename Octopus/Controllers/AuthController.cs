@@ -16,7 +16,7 @@ namespace Octopus.Controllers
     {
 
         private readonly IAuthBusiness _authBusiness;
-       // private readonly IMapper _mapper;
+        private readonly IAuthBusiness IAuthness;
 
         public AuthController(IAuthBusiness authService/*, IMapper mapper*/)
         {
@@ -52,17 +52,20 @@ namespace Octopus.Controllers
         {
             try
             {
+                LoginDto loginDto = new LoginDto
+                {
+                    Email = username,
+                    Password = password
+                };
+
+                int response = _authBusiness.InicioSesionAsync(loginDto).Result;
+
                 var redirectResult = RedirectIfAuthenticated();
                 if (redirectResult != null)
                 {
                     return redirectResult;
                 }
 
-                LoginDto loginDto = new LoginDto
-                {
-                    Email = username,
-                    Password = password
-                };
 
                 //Task<Usuario> loginExitosoTask = new Task<Usuario>();
 

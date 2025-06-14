@@ -1,6 +1,7 @@
 ﻿using Business.Interfaces;
 using Constant;
 using Data.Interfaces;
+using Helpers;
 using Helpers.Interfaces;
 using Models.Dto.Auth;
 using Models.Entities.Domain.DBOctopus.OctopusEntities;
@@ -15,28 +16,52 @@ namespace Business.AuthBusiness
     public class AuthBusiness : IAuthBusiness
     {
         private readonly IUsuarioRepository _usuarioRepository;
-       // private readonly IEmailHelper _emailHelper;
+        private ICodigoHelper _codigoHelper;
         private readonly IAuthRepository _authRepository;
         private readonly IEmailHelper _emailHelper;
 
-        public AuthBusiness(IUsuarioRepository usuarioRepository, IEmailHelper emailHelper, IAuthRepository authRepository)
+
+        public AuthBusiness(IUsuarioRepository usuarioRepository
+                            ,IEmailHelper emailHelper
+                            ,IAuthRepository authRepository
+                            ,ICodigoHelper codigoHelper)
         {
             _usuarioRepository = usuarioRepository;
             _emailHelper = emailHelper;
             _authRepository = authRepository;
+            _codigoHelper = codigoHelper;
         }
 
         #region METODOS PARA LOGIN 
-        
-        public async Task<Usuario> InicioSesionAsync(LoginDto user)
-        {
-            Usuario? usuario = await _authRepository.LoginAsync(user);
 
-            if (usuario != null)
+        public async Task<int> InicioSesionAsync(LoginDto user)
+        {
+
+            Usuario usuario =  _authRepository.LoginAsync(user.Email);
+            bool puedeIniciarSesion = false;
+            if (usuario == null)
             {
-                return usuario;
+                return 0;
             }
-            return null;
+
+            var usuarioOK = PasswordHelper.VerificarPassword(user.Password,usuario.ContrasenaHash,usuario.ContrasenaSalt);
+            if (usuarioOK )
+            {
+                switch (usuario.EstadoUsuarioId)
+                {
+                    case 1:
+                        return 1;
+                    case 2:
+                        return 2;
+                    case 3:
+                        puedeIniciarSesion = true;
+                        return 3;
+                }
+
+            }
+
+
+            return 0;
         }
         
         public async Task<bool> GenerarCodigoRestablecimientoAsync(string email)
@@ -70,7 +95,7 @@ namespace Business.AuthBusiness
             }
 
             // Generar Salt y Hash
-            CrearHashConSalt(signUpDto.Password, out byte[] hash, out byte[] salt);
+            var (hash, salt) = PasswordHelper.CrearHash(signUpDto.Password);
 
             // Crear entidad de usuario
             Usuario usuario = new Usuario
@@ -79,10 +104,13 @@ namespace Business.AuthBusiness
                 Email = signUpDto.Email,
                 ContrasenaHash = hash,
                 ContrasenaSalt = salt,
-                FechaRegistro = DateTime.UtcNow,
+                FechaRegistro = DateTime.Now,
                 EstadoUsuarioId = 1, 
                 TipoDocumentoId = 1,
-                RolId = 1
+                RolId = 1,
+                TokenVerificacion = _codigoHelper.GenerarCodigoUnico(),
+                FechaExpiracionToken = DateTime.Now.AddHours(2), 
+                // Generar un código de referencia único
                 // Agrega más campos si es necesario
             };
 
@@ -96,14 +124,7 @@ namespace Business.AuthBusiness
             return (true, null);
         }
 
-        private void CrearHashConSalt(string password, out byte[] hash, out byte[] salt)
-        {
-            using (var hmac = new System.Security.Cryptography.HMACSHA512())
-            {
-                salt = hmac.Key;
-                hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
-        }
+       
 
         #endregion
 

@@ -2,11 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Models.Dto.Auth;
 using Models.Entities.Domain.DBOctopus.OctopusEntities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data.Repository
 {
@@ -18,13 +13,19 @@ namespace Data.Repository
             _context = context;
         }
 
-        public async Task<Usuario?> LoginAsync(LoginDto user)
+        public Usuario LoginAsync(string email)
         {
-            //Usuario? existeUsuario = await _context.Usuarios
-            //    .Include(u => u.Rol) // Incluir el perfil del usuario
-            //    .FirstOrDefaultAsync(u => u.Email == user.Email && u.ContrasenaHash == user.Password);
-            //return existeUsuario;
-            return null;
+            try
+            {
+                Usuario existeUsuario = _context.Usuarios.Where(x => x.Email == email).FirstOrDefault();
+                return existeUsuario;
+            }
+            catch (Exception ex)
+            {
+
+                return null;
+            }
+           
         }
 
         public async Task<Usuario> CrearUsuarioAsync(Usuario usuario)

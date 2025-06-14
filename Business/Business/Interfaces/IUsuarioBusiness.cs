@@ -9,6 +9,9 @@ namespace Business.Interfaces
 {
     public interface IUsuarioBusiness
     {
-        bool Save(Usuario user);
+       // bool SaveProfile(CreateProfileUserDto user);
+        Usuario ObtenerPorEmail(string email);
+        Usuario ObtenerPorId(Guid Id);
+        Task ActualizarUsuarioAsync(Usuario usuario);
     }
 }
