@@ -1,6 +1,7 @@
 ﻿@model Models.Dto.Auth.SignUpDto
 
 @{
+    var enableUserMsg = ViewData["EnableUser"] as string;
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
@@ -18,6 +19,24 @@
     }
 </style>
 
+<div class="modal fade" id="enableUserModal" tabindex="-1" aria-labelledby="enableUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="enableUserModalLabel">Información</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                @enableUserMsg
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <main class="main-content  mt-0">
     <section>
         <div class="page-header min-vh-100">
@@ -25,9 +44,9 @@
                 <div class="row">
 
                     <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 start-0
-            text-center justify-content-center flex-column">
+                        text-center justify-content-center flex-column">
                         <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg
-           d-flex flex-column justify-content-center fade-edges"
+                                d-flex flex-column justify-content-center fade-edges"
                              style="background-image: url('@Url.Content("~/assets/images/logos/negro.jpg")');">
                             <!-- Aquí cualquier contenido sobre la imagen -->
                         </div>
@@ -127,21 +146,31 @@
         </div>
     </div>
 </footer>
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var enableUserMsg = '@(enableUserMsg ?? "")';
+            if (enableUserMsg && enableUserMsg.length > 0) {
+                var modal = new bootstrap.Modal(document.getElementById('enableUserModal'));
+                modal.show();
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const checkbox = document.getElementById('flexCheckDefault');
+          const enviarBtn = document.getElementById('enviar');
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const checkbox = document.getElementById('flexCheckDefault');
-      const enviarBtn = document.getElementById('enviar');
+          // Función que habilita/deshabilita el botón
+          function toggleEnviar() {
+            enviarBtn.disabled = !checkbox.checked;
+          }
 
-      // Función que habilita/deshabilita el botón
-      function toggleEnviar() {
-        enviarBtn.disabled = !checkbox.checked;
-      }
+          // Inicializa el estado al cargar la página
+          toggleEnviar();
 
-      // Inicializa el estado al cargar la página
-      toggleEnviar();
-
-      // Escucha el cambio de estado del checkbox
-      checkbox.addEventListener('change', toggleEnviar);
-    });
-</script>
+          // Escucha el cambio de estado del checkbox
+          checkbox.addEventListener('change', toggleEnviar);
+        });
+    </script>
+}

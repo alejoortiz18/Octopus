@@ -5,7 +5,7 @@ namespace Business.Interfaces
 {
     public interface IAuthBusiness
     {
-        Task<int> InicioSesionAsync(LoginDto user);
+        Task<(int estado, Usuario usuario)> InicioSesionAsync(LoginDto user);
         Task<bool> GenerarCodigoRestablecimientoAsync(string email);
         Task<(bool Success, string ErrorMessage)> SignUpAsync(SignUpDto signUpDto);
     }

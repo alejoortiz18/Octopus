@@ -34,14 +34,14 @@ namespace Business.AuthBusiness
 
         #region METODOS PARA LOGIN 
 
-        public async Task<int> InicioSesionAsync(LoginDto user)
+        public async Task<(int estado, Usuario usuario)> InicioSesionAsync(LoginDto user)
         {
 
             Usuario usuario =  _authRepository.LoginAsync(user.Email);
             bool puedeIniciarSesion = false;
             if (usuario == null)
             {
-                return 0;
+                return (0,null);
             }
 
             var usuarioOK = PasswordHelper.VerificarPassword(user.Password,usuario.ContrasenaHash,usuario.ContrasenaSalt);
@@ -50,18 +50,18 @@ namespace Business.AuthBusiness
                 switch (usuario.EstadoUsuarioId)
                 {
                     case 1:
-                        return 1;
+                        return (1, usuario);
                     case 2:
-                        return 2;
+                        return (2, usuario); 
                     case 3:
                         puedeIniciarSesion = true;
-                        return 3;
+                        return (3, usuario); 
                 }
 
             }
 
 
-            return 0;
+            return (0,null);
         }
         
         public async Task<bool> GenerarCodigoRestablecimientoAsync(string email)
