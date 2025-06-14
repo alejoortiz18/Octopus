@@ -1,5 +1,7 @@
 ﻿using Data.Interfaces;
+using Helpers.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Models.Dto.Usuario;
 using Models.Entities.Domain.DBOctopus.OctopusEntities;
 using System;
 using System.Collections.Generic;
@@ -12,9 +14,11 @@ namespace Data.Repository
     public class UsuarioRepository : IUsuarioRepository
     {
         private readonly AppDbContext _context;
-        public UsuarioRepository(AppDbContext context)
+        private readonly ICodigoHelper _codigoHelper;
+        public UsuarioRepository(AppDbContext context, ICodigoHelper codigoHelper)
         {
             _context = context;
+            _codigoHelper = codigoHelper;
         }
 
         public Usuario ObtenerPorEmail(string email)
@@ -39,6 +43,28 @@ namespace Data.Repository
             
         }
 
+        public (bool,Usuario) ReenviarCodigo(EnabledUserDto modelUser)
+        {
+            try
+            {
+                // Buscar el usuario por email
+                var usuario = _context.Usuarios.FirstOrDefault(u => u.Email == modelUser.Email);
+                if (usuario == null)
+                { return (false,null); }
+
+                
+                usuario.TokenVerificacion = _codigoHelper.GenerarCodigoUnico(); 
+
+                // Guardar los cambios en la base de datos
+                var saveresult = _context.SaveChanges() > 0;
+                return (saveresult,usuario);
+            }
+            catch (Exception ex)
+            {
+                return (false,null);
+            }
+        }
+
 
         public Task ActualizarUsuarioAsync(Usuario usuario)
         {
@@ -50,5 +76,6 @@ namespace Data.Repository
         {
             throw new NotImplementedException();
         }
+
     }
 }

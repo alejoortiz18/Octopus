@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace Models.Dto.Usuario
 {
-    public class EnableUserDto : IValidatableObject
+    public class RestablecerUsuarioDto : IValidatableObject
     {
+      
+
         [Required(ErrorMessage = "El correo electrónico es obligatorio.")]
         public string Email { get; set; }
 

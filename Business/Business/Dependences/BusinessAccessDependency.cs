@@ -3,6 +3,7 @@ using Business.Interfaces;
 using Business.UsuarioBll;
 using Data.Interfaces;
 using Data.Repository;
+using Helpers.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using perfil = Business.AuthBusiness;
 
@@ -19,7 +20,6 @@ namespace Business.Dependences
             services.AddScoped<IAuthBusiness, perfil.AuthBusiness>();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-            // services.AddScoped<ISerieBusiness, SerieBusiness>();
             services.AddScoped<IUsuarioBusiness, UsuarioBusiness>();
             // services.AddScoped<INadadorXEntrenadorBusiness, NadadorXEntrenadorBusiness>();
             // services.AddScoped<IUsuarioXSesionBusiness, UsuarioXSesionBusiness>();

@@ -1,4 +1,5 @@
-﻿using Models.Entities.Domain.DBOctopus.OctopusEntities;
+﻿using Models.Dto.Usuario;
+using Models.Entities.Domain.DBOctopus.OctopusEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +12,12 @@ namespace Data.Interfaces
     {
         bool Save(Usuario user);
 
-
         Usuario ObtenerPorEmail(string email);
 
         Task ActualizarUsuarioAsync(Usuario usuario);
-
-        
+                
         Usuario ObtenerPorId(Guid Id);
 
+        (bool,Usuario) ReenviarCodigo(EnabledUserDto modelUser);
     }
 }

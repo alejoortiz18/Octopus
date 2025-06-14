@@ -36,6 +36,21 @@ namespace Helpers
             }
         }
 
+        public async Task RestablecerTokenAsync(Usuario usuario, string subject, string body)
+        {
+            try
+            {
+                body = body.Replace("{codigo}", usuario.TokenVerificacion);
+                string cuerpo = body.Replace("{email}", usuario.Email);
+                EnviarEmailAsync(usuario.Email, subject, cuerpo);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al enviar el correo: {ex.Message}");
+            }
+        }
+
         private async Task EnviarEmailAsync(string destinatario, string subject, string body)
         {
             try

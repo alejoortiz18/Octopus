@@ -1,13 +1,13 @@
 ﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @using Models.Dto.Usuario
-@model EnableUserDto
+@model EnabledUserDto
 
 @{
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
 <div class="page-header align-items-start min-vh-100"
-     style="background-size: contain;background-image: url('@Url.Content("~/assets/images/logos/negro.jpg")');">
+     style="background-size: contain;background-image: url('@Url.Content("~/assets/images/logos/marcaAgua.jpg")');">
     <span class="mask bg-gradient-dark opacity-6"></span>
     <div class="container my-auto">
         <div class="row">
@@ -16,47 +16,54 @@
                     <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                         <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
                             <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Habilitar Usuario</h4>
-
                         </div>
                     </div>
                     <div class="card-body">
-                        <form asp-controller="Auth" asp-action="InicioSesion" method="post" asp-antiforgery="true">
-                            <div class="input-group input-group-outline my-3">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-control" id="floatingInput" name="username" required>
+                        <form asp-controller="EnableUser" asp-action="ValidarCodigo" method="post" asp-antiforgery="true">
+                            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                            <div class="input-group input-group-outline my-3 @(Model.Email?.Length > 0 ? "focused" : "")">
+                                <label asp-for="Email" class="form-label">Correo</label>
+                                <input asp-for="Email" class="form-control" />
                             </div>
-                            <div class="input-group input-group-outline mb-3">
-                                <label class="form-label">Password</label>
-                                <input type="password" class="form-control" id="floatingPassword" name="password" required>
+
+                                <span asp-validation-for="Codigo" class="text-danger"></span>
+                            <div class="input-group input-group-outline mb-3 @(Model.Codigo?.Length > 0 ? "focused" : "")">
+                                <label asp-for="Codigo" class="form-label">Código</label>
+                                <input asp-for="Codigo" class="form-control" />
                             </div>
+
                             @if (ViewBag.Mensaje != null)
                             {
                                 <div class="d-flex align-items-center justify-content-between mb-4">
-
                                     <span class="badge badge-secondary">
-                                        usuario o contraseña incorrecto
+                                        @ViewBag.Mensaje
                                     </span>
                                 </div>
                             }
-                            @* <div class="form-check form-switch d-flex align-items-center mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rememberMe">
-                                    <label class="form-check-label mb-0 ms-2" for="rememberMe">Remember me</label>
-                                </div> *@
-                            <div class="text-center">
-                                <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">Iniciar</button>
-                            </div>
-                            <p class="mt-4 text-sm text-center">
-                                No tienes una cuenta?
-                                <a asp-controller="Auth" asp-action="SignUp" class="text-primary text-gradient font-weight-bold">Crear</a>
-                            </p>
-                        </form>
 
+                            <div class="text-center">
+                                <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">Validar</button>
+                            </div>
+
+                        </form>
+                        <div>
+
+                            <p class="mt-4 text-sm text-center">
+                                <form asp-controller="EnableUser" asp-action="ReenviarCodigo" method="post" style="display:inline;">
+                                   
+                                    <input type="hidden" asp-for="Email" />
+                                    <input type="hidden" asp-for="Codigo" />
+                                    <button type="submit" class="btn btn-link" 
+                                        style="background:none;border:none;">Reenviar código</button>
+                                </form>
+                            </p>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
-
 </div>
 

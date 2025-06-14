@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Business.Interfaces;
+using Constant;
 using Data.Interfaces;
 using Helpers.Interfaces;
+using Models.Dto.Usuario;
 using Models.Entities.Domain.DBOctopus.OctopusEntities;
 using System;
 using System.Collections.Generic;
@@ -39,6 +41,17 @@ namespace Business.UsuarioBll
         public Usuario ObtenerPorId(Guid Id)
         {
             return _usuarioRepository.ObtenerPorId(Id);
+        }
+
+        public bool ReenviarCodigo(EnabledUserDto modelUser)
+        {
+            var ( result,User) = _usuarioRepository.ReenviarCodigo(modelUser);
+            if (result)
+            {
+                _email.EnviarCorreoCrearUsuarioNuevoAsync(User, EmailConstant.AsuntoRestablecerCodigo, EmailConstant.CuerpoRestablecerCodigo);
+            }
+            return result;
+
         }
 
         //public bool SaveProfile(CreateProfileUserDto user)

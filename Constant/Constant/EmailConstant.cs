@@ -43,5 +43,22 @@ namespace Constant
                     </p>                    
                     ";
         #endregion
+
+        #region REENVIAR CÓDIGO
+
+        public const string AsuntoRestablecerCodigo = "Restablecer Código";
+
+        public const string CuerpoRestablecerCodigo = $@"
+                    <p>Estimado usuario,</p>
+                    <p>Hemos recibido una solicitud para restablecer código de acceso a <strong>Octopus</strong>.</p>
+                    <p>Para completar el proceso, utilice el siguiente código:</p>
+                    <h2 style='color: #2E86C1;'>{{codigo}}</h2>
+                    <p><strong>Este código es de un solo uso y tiene una validez limitada.</strong></p>
+                    <p>Si no solicitó este cambio, ignore este mensaje.</p>
+                    <p></p>
+                    <p>Atentamente,</p>
+                    <p><strong>Equipo de Octopus</strong></p>";
+        #endregion
+
     }
 }

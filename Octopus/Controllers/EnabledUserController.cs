@@ -1,7 +1,11 @@
 ﻿using Business.Interfaces;
 using Constant;
+using Helpers.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using Models.Dto.Usuario;
 
 namespace Octopus.Controllers
@@ -9,84 +13,111 @@ namespace Octopus.Controllers
     public class EnableUserController : Controller
     {
         private readonly IUsuarioBusiness _IUsuarioBusiness;
-        public EnableUserController(IUsuarioBusiness IUsuarioBusiness)
+        private bool isMsn;
+
+        public EnableUserController(IUsuarioBusiness IUsuarioBusiness )
         {
             _IUsuarioBusiness = IUsuarioBusiness;
+            
 
         }
+
 
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ValidarCodigo(string codigo, string email)
         {
-            if (string.IsNullOrEmpty(codigo) || string.IsNullOrEmpty(email))
+            var model = new EnabledUserDto
             {
-                ViewData["ValidatedFailed"] = EnableUserResponseConstant.CodigoAndEmailInvalidoMsn;
-                return View();
-            }
-
-            var usuario = _IUsuarioBusiness.ObtenerPorEmail(email);
-            // Validar si la fecha de expiración del token es válida
-            if (usuario.FechaExpiracionToken < DateTime.Now)
-            {
-                ViewData["ValidatedFailed"] = EnableUserResponseConstant.FechaExpiracionTokenMsn;
-                return View();
-            }
-
-
-            if (usuario.EstadoUsuarioId == 2 )
-            {
-                ViewData["ValidatedFailed"] = EnableUserResponseConstant.BloqueoUsuarioMsn;
-                return View();
-            }
-
-            if (codigo != usuario.TokenVerificacion)
-            {
-                ViewData["ValidatedFailed"] = EnableUserResponseConstant.TokenInvalidoMsn;
-                return View();
-            }
-
-            // Si el código es válido, mostrar el formulario para crear una nueva contraseña
-            var enableUserDto = new EnableUserDto
-            {
-
                 Email = email,
                 Codigo = codigo
             };
 
-            ViewData["EnableUserDto"] = enableUserDto;
-            return View(usuario);
+            if (TempData["reenviarCodigo"] != null)
+            {
+                ModelState.AddModelError(string.Empty, TempData["reenviarCodigo"].ToString());
+                return View(model);
+
+            }
+
+            string mensaje = ValidarCodigoInterno(codigo,  email);
+            if (!mensaje.IsNullOrEmpty())
+            {
+                ViewData["EnableUserDto"] = null;
+                ModelState.AddModelError(string.Empty, mensaje);
+                return View(model);
+            }
+
+            ViewData["EnableUserDto"] = null;
+            return View(model);
         }
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult ValidarCodigo(EnableUserDto enableUserDto)
+        public IActionResult ValidarCodigo(EnabledUserDto modelUser)
         {
-        //    if (!ModelState.IsValid)
-        //    {
-        //        // Mostrar los errores de validación en la vista
-        //        return View(enableUserDto);
-        //    }
-
-        //    // Validar si el código es válido
-        //    var usuario = _IUsuarioBusiness.ObtenerPorEmail(enableUserDto.Email);
-
-        //    if (usuario == null || usuario.CodigoActivo == false || usuario.Contrasena != "0")
-        //    {
-        //        ModelState.AddModelError(string.Empty, "El código es inválido o ha expirado.");
-        //        return View(enableUserDto);
-        //    }
-
-        //    usuario.Contrasena = enableUserDto.Password1;
-        //    usuario.CodigoActivo = false;
-        //    usuario.CodigoRestablecerPassword = "";
-
-
-        //    // Aquí se puede agregar la lógica para habilitar al usuario y actualizar la contraseña
-        //    _IUsuarioBusiness.ActualizarUsuarioAsync(usuario);
+            string mensaje = ValidarCodigoInterno(modelUser.Codigo, modelUser.Email);
+            if (!mensaje.IsNullOrEmpty())
+            {
+                ViewData["EnableUserDto"] = null;
+                ModelState.AddModelError(string.Empty, mensaje);
+                return View(modelUser);
+            }
+           
 
             ViewData["expirado"] = "Usuario habilitado y contraseña actualizada correctamente.";
-            return View(enableUserDto);
+            return View();
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult ReenviarCodigo(EnabledUserDto modelUser)
+        {
+            bool response = _IUsuarioBusiness.ReenviarCodigo(modelUser);
+            if (!response)
+            {
+                ModelState.AddModelError(string.Empty, CodigoResponseConstant.RestablecerCodigoFallido);
+                return View("ValidarCodigo", modelUser);
+            }
+            TempData["reenviarCodigo"] = CodigoResponseConstant.RestablecerCodigoOK;
+            return RedirectToAction("ValidarCodigo", new { codigo = modelUser.Codigo, email = modelUser.Email });
+
+        }
+
+
+
+        private string ValidarCodigoInterno(string codigo, string email)
+        {
+            if (string.IsNullOrEmpty(codigo) || string.IsNullOrEmpty(email))
+            {
+                return EnableUserResponseConstant.CodigoAndEmailInvalidoMsn;
+            }
+
+            var usuario = _IUsuarioBusiness.ObtenerPorEmail(email);
+            if (usuario == null)
+            {
+                return EnableUserResponseConstant.CodigoAndEmailInvalidoMsn;
+            }
+
+            if (usuario.FechaExpiracionToken < DateTime.Now)
+            {
+                return EnableUserResponseConstant.FechaExpiracionTokenMsn;
+            }
+
+            if (usuario.EstadoUsuarioId == 2)
+            {
+                return EnableUserResponseConstant.BloqueoUsuarioMsn;
+            }
+
+            if (codigo != usuario.TokenVerificacion)
+            {
+                return EnableUserResponseConstant.TokenInvalidoMsn;
+            }
+
+            // Si llega aquí, no hay mensaje de error
+            return string.Empty;
+        }
+
+
     }
 }
