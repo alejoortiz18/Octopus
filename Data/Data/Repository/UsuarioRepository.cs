@@ -53,7 +53,8 @@ namespace Data.Repository
                 { return (false,null); }
 
                 
-                usuario.TokenVerificacion = _codigoHelper.GenerarCodigoUnico(); 
+                usuario.TokenVerificacion = _codigoHelper.GenerarCodigoUnico();
+                usuario.FechaExpiracionToken = DateTime.Now.AddHours(2);
 
                 // Guardar los cambios en la base de datos
                 var saveresult = _context.SaveChanges() > 0;
@@ -66,9 +67,30 @@ namespace Data.Repository
         }
 
 
-        public Task ActualizarUsuarioAsync(Usuario usuario)
+        public async Task<bool> ActualizarUsuarioAsync(Usuario usuario)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var usuarioExistente = await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.UsuarioId == usuario.UsuarioId);
+
+                if (usuarioExistente == null)
+                {
+                    return false;
+                }
+                usuarioExistente.EstadoUsuarioId = usuario.EstadoUsuarioId;
+                usuarioExistente.TokenVerificacion = usuario.TokenVerificacion;
+                usuarioExistente.FechaExpiracionToken = usuario.FechaExpiracionToken;
+                usuarioExistente.FechaHabilitacion = usuario.FechaHabilitacion;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            } 
+         
         }
 
 

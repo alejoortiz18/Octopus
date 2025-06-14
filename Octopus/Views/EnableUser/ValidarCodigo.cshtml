@@ -4,7 +4,27 @@
 
 @{
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    var enableUserMsg = ViewData["EnableUser"] as string;
+    var isValidoOK = ViewData["isValidoOK"] as bool? ?? false;
 }
+
+<!-- Modal Bootstrap -->
+<div class="modal fade" id="enableUserModal" tabindex="-1" aria-labelledby="enableUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="enableUserModalLabel">Información</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                @enableUserMsg
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="page-header align-items-start min-vh-100"
      style="background-size: contain;background-image: url('@Url.Content("~/assets/images/logos/marcaAgua.jpg")');">
@@ -18,7 +38,20 @@
                             <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Habilitar Usuario</h4>
                         </div>
                     </div>
-                    <div class="card-body">
+                     @if (isValidoOK)
+                     {
+                        <div class="card-body">
+                            <div role="alert" style="text-align: center; background-color: #e6f4ea; border: none;">
+                                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                    {
+                                        <p style="font-weight: bold; font-size: 1.25rem;">@error.ErrorMessage</p>
+                                    }
+                                </div>
+                        </div>
+                     }
+                      else
+                     {
+                        <div class="card-body">
                         <form asp-controller="EnableUser" asp-action="ValidarCodigo" method="post" asp-antiforgery="true">
                             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
@@ -28,7 +61,7 @@
                                 <input asp-for="Email" class="form-control" />
                             </div>
 
-                                <span asp-validation-for="Codigo" class="text-danger"></span>
+                            <span asp-validation-for="Codigo" class="text-danger"></span>
                             <div class="input-group input-group-outline mb-3 @(Model.Codigo?.Length > 0 ? "focused" : "")">
                                 <label asp-for="Codigo" class="form-label">Código</label>
                                 <input asp-for="Codigo" class="form-control" />
@@ -44,15 +77,14 @@
                             }
 
                             <div class="text-center">
-                                <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">Validar</button>
+                                <button type="submit" formaction="@Url.Action("ValidarCodigo", "EnableUser")" formmethod="get" class="btn bg-gradient-primary w-100 my-4 mb-2">Validar</button>
                             </div>
+                            
 
                         </form>
                         <div>
-
                             <p class="mt-4 text-sm text-center">
                                 <form asp-controller="EnableUser" asp-action="ReenviarCodigo" method="post" style="display:inline;">
-                                   
                                     <input type="hidden" asp-for="Email" />
                                     <input type="hidden" asp-for="Codigo" />
                                     <button type="submit" class="btn btn-link" 
@@ -61,9 +93,21 @@
                             </p>
                         </div>
                     </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var enableUserMsg = '@(enableUserMsg ?? "")';
+            if (enableUserMsg && enableUserMsg.length > 0) {
+                var modal = new bootstrap.Modal(document.getElementById('enableUserModal'));
+                modal.show();
+            }
+        });
+    </script>
+}

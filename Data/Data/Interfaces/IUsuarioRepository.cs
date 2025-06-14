@@ -14,7 +14,7 @@ namespace Data.Interfaces
 
         Usuario ObtenerPorEmail(string email);
 
-        Task ActualizarUsuarioAsync(Usuario usuario);
+        Task<bool> ActualizarUsuarioAsync(Usuario usuario);
                 
         Usuario ObtenerPorId(Guid Id);
 

@@ -22,7 +22,12 @@ namespace Octopus.Controllers
 
         }
 
-
+        /// <summary>
+        /// Este método es usado para cuando se da click en Habilitar cuenta usuario en el correo
+        /// </summary>
+        /// <param name="codigo"></param>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ValidarCodigo(string codigo, string email)
@@ -41,33 +46,33 @@ namespace Octopus.Controllers
             }
 
             string mensaje = ValidarCodigoInterno(codigo,  email);
-            if (!mensaje.IsNullOrEmpty())
+            if (mensaje == UsuarioMsnConstant.IsRegisterOk)
             {
                 ViewData["EnableUserDto"] = null;
                 ModelState.AddModelError(string.Empty, mensaje);
+                // Reemplaza la línea seleccionada por la siguiente:
+                ViewData["isValidoOK"] = true;
                 return View(model);
             }
-
-            ViewData["EnableUserDto"] = null;
+            ViewData["isValidoOK"] = false;
+            ViewData["EnableUser"] = mensaje;
             return View(model);
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        public IActionResult ValidarCodigo(EnabledUserDto modelUser)
-        {
-            string mensaje = ValidarCodigoInterno(modelUser.Codigo, modelUser.Email);
-            if (!mensaje.IsNullOrEmpty())
-            {
-                ViewData["EnableUserDto"] = null;
-                ModelState.AddModelError(string.Empty, mensaje);
-                return View(modelUser);
-            }
+        //[HttpPost]
+        //[AllowAnonymous]
+        //public IActionResult ValidarCodigo(EnabledUserDto modelUser)
+        //{
+        //    string mensaje = ValidarCodigoInterno(modelUser.Codigo, modelUser.Email);
+        //    if (!mensaje.IsNullOrEmpty())
+        //    {
+        //        ViewData["EnableUserDto"] = null;
+        //        ModelState.AddModelError(string.Empty, mensaje);
+        //        return View(modelUser);
+        //    }
            
-
-            ViewData["expirado"] = "Usuario habilitado y contraseña actualizada correctamente.";
-            return View();
-        }
+        //    return View();
+        //}
 
         [HttpPost]
         [AllowAnonymous]
@@ -114,8 +119,18 @@ namespace Octopus.Controllers
                 return EnableUserResponseConstant.TokenInvalidoMsn;
             }
 
+            usuario.EstadoUsuarioId = 3;
+            usuario.TokenVerificacion = "";
+            usuario.FechaExpiracionToken = null;
+            usuario.FechaHabilitacion = DateTime.Now;
+            bool isUpdate = _IUsuarioBusiness.ActualizarUsuarioAsync(usuario).Result;
+            if(!isUpdate)
+            {
+                return UsuarioMsnConstant.RegisterFailed;
+            }
+
             // Si llega aquí, no hay mensaje de error
-            return string.Empty;
+            return UsuarioMsnConstant.IsRegisterOk;
         }
 
 

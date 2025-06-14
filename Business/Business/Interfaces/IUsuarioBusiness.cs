@@ -13,7 +13,7 @@ namespace Business.Interfaces
        // bool SaveProfile(CreateProfileUserDto user);
         Usuario ObtenerPorEmail(string email);
         Usuario ObtenerPorId(Guid Id);
-        Task ActualizarUsuarioAsync(Usuario usuario);
+        Task<bool> ActualizarUsuarioAsync(Usuario usuario);
 
         bool ReenviarCodigo(EnabledUserDto modelUser);
     }

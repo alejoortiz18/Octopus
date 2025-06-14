@@ -33,7 +33,7 @@ namespace Business.UsuarioBll
             return _usuarioRepository.ObtenerPorEmail(email);
         }
 
-        public Task ActualizarUsuarioAsync(Usuario usuario)
+        public Task<bool> ActualizarUsuarioAsync(Usuario usuario)
         {
             return _usuarioRepository.ActualizarUsuarioAsync(usuario);
         }
