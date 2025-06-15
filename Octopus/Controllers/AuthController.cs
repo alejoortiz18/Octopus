@@ -1,21 +1,33 @@
 ﻿using Business.Interfaces;
 using Constant;
+using Helpers;
+using Helpers.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Models.Dto.Auth;
+using Models.Dto.Usuario;
+using Models.Entities.Domain.DBOctopus.OctopusEntities;
 using System.Security.Claims;
+using System.Security.Policy;
 
 namespace Octopus.Controllers
 {
     public class AuthController : Controller
     {
         private readonly IAuthBusiness _authBusiness;
+        private readonly IUsuarioBusiness _userBusiness;
+        private readonly IEmailHelper _emailHelper;
+        private readonly ICodigoHelper _codigoHelper;
 
-        public AuthController(IAuthBusiness authService)
+        public AuthController(IAuthBusiness authService, IUsuarioBusiness userBusiness, IEmailHelper emailHelper , ICodigoHelper codigoHelper)
         {
             _authBusiness = authService;
+            _userBusiness = userBusiness;
+            _emailHelper = emailHelper;
+            _codigoHelper = codigoHelper;
         }
 
         private IActionResult RedirectIfAuthenticated()
@@ -114,6 +126,10 @@ namespace Octopus.Controllers
         [AllowAnonymous]
         public IActionResult SignUp()
         {
+            ResetPasswordDto dto = new ResetPasswordDto();
+            
+            ViewData["DatoDto"] = dto;
+            ViewData["EnableUser"] ="";
             return View();
         }
 
@@ -145,6 +161,130 @@ namespace Octopus.Controllers
 
 
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+      
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ResetPasswordResponseDto username)
+        {
+            
+
+            if(username.Codigo == "-1" && username.NewPassword.IsNullOrEmpty())
+            {
+                username.Codigo = null;
+                var result =  _userBusiness.ObtenerPorEmail(username.Email);
+                if (result == null)
+                {
+                    ModelState.AddModelError(string.Empty, ResetPasswordConstant.EmailNoExiste);
+                    return View();
+                }
+                if (result.EstadoUsuarioId ==2)
+                {
+                    ModelState.AddModelError(string.Empty, ResetPasswordConstant.EmailSuspendido);
+                    return View();
+                }
+                result.TokenVerificacion = _codigoHelper.GenerarCodigoUnico();
+                result.FechaExpiracionToken = DateTime.Now.AddHours(2);
+
+                 bool resultUpdate = _userBusiness.ActualizarUsuarioAsync(result).Result;
+
+                if (resultUpdate)
+                {
+                    var rsult = _emailHelper.EnviarCorreoAsync(username.Email,
+                                                             result.TokenVerificacion,
+                                                             EmailConstant.AsuntoRestablecerContrasena,
+                                                             EmailConstant.CuerpoRestablecerContrasena);
+
+                    if (rsult.IsCompletedSuccessfully)
+                    {
+                        ResetPasswordDto datoDto = new ResetPasswordDto();
+
+                        datoDto.Email = username.Email;
+                        datoDto.IsGenerated = true;
+                        datoDto.Message = "Se ha enviado un correo con el código de restablecimiento";
+                        ViewData["DatoDto"] = datoDto;
+                        ViewData["EnableUser"] = datoDto.Message;
+                    }
+                }
+            }
+            else
+            {
+                if (!username.NewPassword.Equals(username.RepeatNewPassword))
+                {
+                    ModelState.AddModelError(string.Empty, "Las contraseñas no son iguales");
+                }else if ( username.Codigo == "" || username.Codigo == null)
+                {
+                    ModelState.AddModelError(string.Empty, "El codigo es obligatorio");
+                }
+                else
+                {
+                    var resultUser = _userBusiness.ObtenerPorEmail(username.Email);
+
+                    resultUser.TokenVerificacion = null;
+                    resultUser.FechaExpiracionToken = null;
+                    resultUser.CambioContrasena = true;
+
+                    var (hash, salt) = PasswordHelper.CrearHash(username.NewPassword);
+                    resultUser.ContrasenaHash = hash;
+                    resultUser.ContrasenaSalt = salt;
+                    resultUser.RolId = 1;
+                    resultUser.FechaUltimoAcceso = DateTime.Now;
+                    var responseUpdate = _userBusiness.ActualizarUsuarioAsync(resultUser).Result;
+
+                   
+                }
+            }
+
+
+                return View();
+        }
+
+        //[HttpPost]
+        //[AllowAnonymous]
+        //public IActionResult ResetPasswordValid(ResetPasswordResponseDto model)
+        //{
+        //    ResetPasswordDto datoDto = new ResetPasswordDto();
+
+        //    if (!ModelState.IsValid)
+        //    {
+        //        datoDto.Email = model.Email;
+        //        datoDto.IsGenerated = true;
+        //        datoDto.Message = "";
+        //        ViewData["DatoDto"] = datoDto;
+        //        return View("ResetPassword", model);
+        //    }
+
+        //    //UserCod userCod = new UserCod
+        //    //{
+        //    //    Email = model.Email,
+        //    //    Contrasena = model.NewPassword,
+        //    //    CodigoRestablecerPassword = model.Codigo,
+        //    //    CodigoActivo = false
+        //    //};
+
+        //    //bool result = _authService.ChangePassword(userCod);
+
+        //    //if (!result)
+        //    if (true)
+        //    {
+
+        //        datoDto.Email = model.Email;
+        //        datoDto.IsGenerated = true;
+        //        datoDto.Message = "";
+        //        ViewData["DatoDto"] = datoDto;
+        //        ModelState.AddModelError(string.Empty, "Código inválido.");
+        //        return View("ResetPassword", model);
+
+
+        //    }
+        //}
 
     }
 }
