@@ -238,7 +238,13 @@ namespace Octopus.Controllers
                     resultUser.FechaUltimoAcceso = DateTime.Now;
                     var responseUpdate = _userBusiness.ActualizarUsuarioAsync(resultUser).Result;
 
-                   
+                    ResetPasswordDto datoDto = new ResetPasswordDto();
+
+                    datoDto.Email = username.Email;
+                    datoDto.IsGenerated = true;
+                    datoDto.Message = "Se ha establecido la cuenta correctamente";
+                    ViewData["DatoDto"] = datoDto;
+                    ViewData["EnableUser"] = datoDto.Message;
                 }
             }
 
