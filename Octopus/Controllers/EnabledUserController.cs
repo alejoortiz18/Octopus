@@ -119,7 +119,6 @@ namespace Octopus.Controllers
                 return EnableUserResponseConstant.TokenInvalidoMsn;
             }
 
-            usuario.EstadoUsuarioId = 3;
             usuario.TokenVerificacion = "";
             usuario.FechaExpiracionToken = null;
             usuario.FechaHabilitacion = DateTime.Now;
