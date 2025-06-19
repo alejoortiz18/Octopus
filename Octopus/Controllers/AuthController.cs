@@ -155,7 +155,7 @@ namespace Octopus.Controllers
             }
             else
             {
-                ViewData["EnableUser"] = "Se ha creado el usuario, verifica el correo para continuar con el registo.";
+                ViewData["EnableUser"] = RegistroConstant.RegistroOK;
                 return View(signUp);
             }
 

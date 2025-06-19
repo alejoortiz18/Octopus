@@ -31,10 +31,10 @@ namespace Models.Dto.Auth
                 );
             }
 
-            if (string.IsNullOrWhiteSpace(Password) || Password.Length < 6)
+            if (string.IsNullOrWhiteSpace(Password) || Password.Length < 8)
             {
                 yield return new ValidationResult(
-                    "La contraseña debe tener al menos 6 caracteres.",
+                    "La contraseña debe tener al menos 8 caracteres.",
                     new[] { nameof(Password) }
                 );
             }
