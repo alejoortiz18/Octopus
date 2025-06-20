@@ -1,0 +1,12 @@
+INSERT INTO [Octopus].[dbo].[EstadoUsuario] ([EstadoUsuarioID], [Nombre], [Descripcion])
+VALUES
+    (1, 'Pendiente', 'Cuenta pendiente de activación'),
+    (2, 'Suspendido', 'Cuenta suspendida temporalmente'),
+    (3, 'Activo', 'Cuenta Activa');
+
+
+INSERT INTO [Octopus].[dbo].[Rol] ([RolID], [Nombre], [Descripcion], [NivelAcceso])
+VALUES (1, 'administrador', 'Rol con acceso total', 1);
+
+INSERT INTO [Octopus].[dbo].[TipoDocumento] ([TipoDocumentoID], [Nombre], [Descripcion])
+VALUES (1, 'Cédula de ciudadanía', 'Documento nacional de identidad de ciudadanos colombianos');

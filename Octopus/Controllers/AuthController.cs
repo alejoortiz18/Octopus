@@ -95,7 +95,7 @@ namespace Octopus.Controllers
                         {
                             new Claim(ClaimTypes.Name, usuario.NombreCompleto), // Fix for CS1061: Use the correct property from Usuario
                             new Claim(ClaimTypes.Email, username),
-                            new Claim(ClaimTypes.Role, usuario.Rol.Nombre) // Assuming Rol.Nombre exists
+                            //new Claim(ClaimTypes.Role, usuario.Rol.Tipo) // Assuming Rol.Tipo exists
                         };
 
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -108,6 +108,11 @@ namespace Octopus.Controllers
                         new ClaimsPrincipal(claimsIdentity),
                         properties: authProperties
                     );
+
+                    if (loginExitoso.usuario.CodigoReferencia == null)
+                    {
+                        return RedirectToAction("Profile", "Usuario", new { primerInicio = true });
+                    }
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -155,7 +160,7 @@ namespace Octopus.Controllers
             }
             else
             {
-                ViewData["EnableUser"] = "Se ha creado el usuario, verifica el correo para continuar con el registo.";
+                ViewData["EnableUser"] = RegistroConstant.RegistroOK;
                 return View(signUp);
             }
 
@@ -251,6 +256,9 @@ namespace Octopus.Controllers
 
                 return View();
         }
+
+
+       
 
         //[HttpPost]
         //[AllowAnonymous]

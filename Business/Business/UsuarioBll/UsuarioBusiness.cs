@@ -62,7 +62,7 @@ namespace Business.UsuarioBll
         //    if (userResult == null)
         //    {
         //        var usuario = _mapper.Map<Usuario>(user);
-        //        usuario.Nombre = $"{usuario.Nombre} {user.Apellido}";
+        //        usuario.Tipo = $"{usuario.Tipo} {user.Apellido}";
         //        usuario.PerfilActivo = true;
         //        usuario.CodigoRestablecerPassword = _codigoHelper.GenerarCodigoUnico();
         //        usuario.CodigoActivo = true;
