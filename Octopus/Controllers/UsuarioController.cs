@@ -71,7 +71,7 @@ namespace Octopus.Controllers
 
             model2.DatosBancarios.Bancos.AddRange(bancos);
             model2.TipoBancarios.Tipocuenta.AddRange(tipoCuenta);
-
+            model2.UsuarioId = 12345;
 
             return View(model2);
         }

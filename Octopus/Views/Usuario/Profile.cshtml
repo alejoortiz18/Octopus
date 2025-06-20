@@ -64,6 +64,7 @@
                                         <table class="table align-items-center mb-0">
                                             <tbody>
                                                 <!-- NumeroDocumento -->
+                                                <input asp-for="UsuarioId" type="hidden" readonly />
                                                 <tr>
                                                     <td>
                                                         <div class="d-flex px-2 py-1">
@@ -121,11 +122,11 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="DatosPersonales.Email" class="form-control" />
+                                                            <input asp-for="DatosPersonales.Email" class="form-control" readonly />
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
-                                                        <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
+                                                        <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
                                                     </td>
                                                 </tr>
 
