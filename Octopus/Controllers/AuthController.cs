@@ -109,6 +109,11 @@ namespace Octopus.Controllers
                         properties: authProperties
                     );
 
+                    if (loginExitoso.usuario.CodigoReferencia == null)
+                    {
+                        return RedirectToAction("Profile", "Usuario", new { primerInicio = true });
+                    }
+
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -245,6 +250,9 @@ namespace Octopus.Controllers
 
                 return View();
         }
+
+
+       
 
         //[HttpPost]
         //[AllowAnonymous]

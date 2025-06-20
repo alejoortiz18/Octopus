@@ -1,3 +1,4 @@
+using Business.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -14,10 +15,12 @@ namespace Octopus.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IUsuarioBusiness _usuarioBusiness;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IUsuarioBusiness usuario)
         {
             _logger = logger;
+            _usuarioBusiness = usuario;
         }
 
         [HttpGet]
@@ -30,6 +33,7 @@ namespace Octopus.Controllers
                
                 ViewData["sesion"] = "";
             }
+            ValidarEstadoPerfil();
             return View();
         }
 
@@ -58,6 +62,12 @@ namespace Octopus.Controllers
             Response.Headers["Expires"] = "0";
 
             return RedirectToAction("InicioSesion", "Auth");
+        }
+
+        private void ValidarEstadoPerfil()
+        {
+            string? userEmail = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+            var resultUser =_usuarioBusiness.ObtenerPorEmail(userEmail);
         }
     }
 }

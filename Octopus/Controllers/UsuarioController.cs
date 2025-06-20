@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Constant;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dto.Banco;
 using Models.Dto.Usuario;
@@ -9,8 +10,13 @@ namespace Octopus.Controllers
     [Authorize]
     public class UsuarioController : Controller
     {
-        public IActionResult Profile()
+        public IActionResult Profile(bool? primerInicio =false)
         {
+            if (primerInicio.Equals(true))
+            {
+                ViewData["MensajeReferente"] = UsuarioMsnConstant.CodigoReferenteIsNull;
+            }
+
             var model = new DatosPersonalesUsuarioDto
             {
                 CodigoReferencia = "",

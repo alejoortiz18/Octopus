@@ -2,7 +2,36 @@
 @model PerfilUsuarioViewModel;
 
 
+@if (!string.IsNullOrWhiteSpace(ViewData["MensajeReferente"] as string))
+{
+    <div class="modal fade" id="mensajeReferenteModal" tabindex="-1" aria-labelledby="mensajeReferenteLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-warning">
+                <div class="modal-header bg-warning bg-gradient">
+                    <h5 class="modal-title text-dark" id="mensajeReferenteLabel">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>Advertencia
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-dark">
+                    @ViewData["MensajeReferente"]
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var modal = new bootstrap.Modal(document.getElementById('mensajeReferenteModal'));
+            modal.show();
+        });
+    </script>
+}
 
+
+<!-- ...el resto del archivo permanece igual... -->
 
 <div>
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true" style="place-self: center;">
