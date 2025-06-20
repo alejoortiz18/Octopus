@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Models.Dto.Banco;
 using Models.Dto.Usuario;
+using Models.Model.Usuario;
 
 namespace Octopus.Controllers
 {
@@ -11,7 +13,7 @@ namespace Octopus.Controllers
         {
             var model = new DatosPersonalesUsuarioDto
             {
-                
+                CodigoReferencia = "",
                 EstadoUsuario = 1,
                 TipoDocumento = 1,
                 NumeroDocumento = "123456789",
@@ -21,7 +23,44 @@ namespace Octopus.Controllers
                 FechaHabilitacion = DateTime.Now.AddDays(-10)
             };
 
-            return View(model);
+            List<BancoDto> bancos = new List<BancoDto>
+            {
+                new BancoDto
+                {
+                    BancoId = 1,
+                    Nombre = "Banco de bogota",
+                    Codigo = "BE001",
+                    Activo = true
+                },
+                new BancoDto
+                {
+                    BancoId = 2,
+                    Nombre = "Bancolombia",
+                    Codigo = "BP002",
+                    Activo = true
+                }
+                // Puede agregar más bancos aquí según sea necesario
+            };
+
+            var model2 = new PerfilUsuarioViewModel
+            {
+                DatosPersonales = model
+
+            };
+
+            model2.DatosBancarios.Bancos.AddRange(bancos);
+
+            
+            return View(model2);
+        }
+
+        [HttpPost]
+        public IActionResult ActualizarPerfil(PerfilUsuarioViewModel model)
+        {
+            // Accede a model.DatosPersonales y model.DatosBancarios
+            // Procesar y guardar los datos
+
+            return RedirectToAction("PerfilUsuario");
         }
     }
 }

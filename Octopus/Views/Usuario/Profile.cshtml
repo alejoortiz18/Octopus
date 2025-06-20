@@ -1,8 +1,17 @@
-﻿@using Models.Dto.Usuario
-@model DatosPersonalesUsuarioDto
+﻿@using Models.Model.Usuario;
+@model PerfilUsuarioViewModel;
 
 @{
-    ViewData["Title"] = "Perfil de Usuario";
+    try
+    {
+     
+        
+    }
+    catch (Exception ex)
+    {
+        // Manejo de error: puedes mostrar un mensaje o registrar el error
+        // Ejemplo: ViewBag.Error = "Error al obtener el código de referencia.";
+    }
 }
 
 
@@ -51,7 +60,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="NumeroDocumento" class="form-control" readonly />
+                                                            <input asp-for="DatosPersonales.NumeroDocumento" class="form-control" readonly />
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
@@ -64,7 +73,7 @@
                                                     <td>
                                                         <div class="d-flex px-2 py-1">
                                                             <div>
-                                                                <img src="~/assets/img/team-3.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="@Model.NombreCompleto">
+                                                                <img src="~/assets/img/team-3.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="DatosPersonales.NombreCompleto">
                                                             </div>
                                                             <div class="d-flex flex-column justify-content-center">
                                                                 <label class="text-sm">Nombre Completo</label>
@@ -73,7 +82,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="NombreCompleto" class="form-control" />
+                                                            <input asp-for="DatosPersonales.NombreCompleto" class="form-control" />
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
@@ -95,7 +104,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="Email" class="form-control" />
+                                                            <input asp-for="DatosPersonales.Email" class="form-control" />
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
@@ -118,18 +127,19 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            @if (string.IsNullOrWhiteSpace(Model.CodigoReferencia))
+                                                            
+                                                            @if (string.IsNullOrWhiteSpace(Model.DatosPersonales.CodigoReferencia))
                                                             {
-                                                                <input asp-for="CodigoReferencia" class="form-control" />
+                                                                <input asp-for="DatosPersonales.CodigoReferencia" class="form-control" />
                                                             }
                                                             else
                                                             {
-                                                                <input asp-for="CodigoReferencia" class="form-control" readonly />
+                                                                <input asp-for="DatosPersonales.CodigoReferencia" class="form-control" readonly />
                                                             }
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
-                                                        @if (string.IsNullOrWhiteSpace(Model.CodigoReferencia))
+                                                        @if (string.IsNullOrWhiteSpace(Model.DatosPersonales.CodigoReferencia))
                                                         {
                                                             <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
                                                         }
@@ -154,7 +164,7 @@
                                                      </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input class="form-control" value="@(Model.EstadoUsuario == 1 ? "Habilitado" : Model.EstadoUsuario.ToString())" readonly />
+                                                            <input class="form-control" value="@(Model.DatosPersonales.EstadoUsuario == 1 ? "Habilitado" : Model.DatosPersonales.EstadoUsuario.ToString())" readonly />
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
@@ -178,7 +188,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="FechaRegistro" class="form-control" readonly />
+                                                            <input asp-for="DatosPersonales.FechaRegistro" class="form-control" readonly />
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
@@ -200,7 +210,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="FechaHabilitacion" class="form-control" readonly />
+                                                            <input asp-for="DatosPersonales.FechaHabilitacion" class="form-control" readonly />
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
@@ -244,51 +254,35 @@
                                     <div class="table-responsive p-0">
                                         <table class="table align-items-center mb-0">
                                             <tbody>
-                                                <!-- NumeroDocumento -->
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex px-2 py-1">
-                                                            <div>
-                                                                <img src="~/assets/images/iconos/cedula.png" class="avatar avatar-sm me-3 border-radius-lg" alt="Documento" />
-                                                            </div>
-                                                            <div class="d-flex flex-column justify-content-center">
-                                                                <p class="text-xs text-secondary mb-0">Número de cédula</p>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="NumeroDocumento" class="form-control" readonly />
-                                                        </div>
-                                                    </td>
-                                                    <td class="align-middle text-center text-sm">
-                                                        <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
-                                                    </td>
-                                                </tr>
+                                              
 
                                                 <!-- NombreCompleto -->
-                                                <tr>
+                                               <tr>
                                                     <td>
                                                         <div class="d-flex px-2 py-1">
                                                             <div>
-                                                                <img src="~/assets/img/team-3.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="@Model.NombreCompleto">
+                                                                <img src="~/assets/images/iconos/banco.png" class="avatar avatar-sm me-3 border-radius-lg" alt="Banco" />
                                                             </div>
                                                             <div class="d-flex flex-column justify-content-center">
-                                                                <label class="text-sm">Nombre Completo</label>
+                                                                <label asp-for="DatosBancarios.Banco" class="text-sm"></label>
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="NombreCompleto" class="form-control" />
+                                                            <select asp-for="DatosBancarios.Banco"
+                                                                    class="form-control"
+                                                                    asp-items="@(new SelectList(Model.DatosBancarios.Bancos, "BancoId", "Nombre"))">
+                                                                <option value="">Seleccione un banco</option>
+                                                            </select>
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
                                                         <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
                                                     </td>
-                                                </tr>
+                                                </tr> 
 
-                                                <!-- Email -->
+                                                    <!-- Email -->
                                                 <tr>
                                                     <td>
                                                         <div class="d-flex px-2 py-1">
@@ -302,50 +296,34 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="Email" class="form-control" />
+                                                            <input asp-for="DatosPersonales.Email" class="form-control" />
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
                                                         <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
                                                     </td>
                                                 </tr>
-
+ 
                                                 <!-- CodigoReferencia -->
                                                 <tr>
                                                     <td>
                                                         <div class="d-flex px-2 py-1">
                                                             <div>
-                                                                <img src="~/assets/images/iconos/referente.png" class="avatar avatar-sm me-3 border-radius-lg" alt="Documento" />
+                                                                <img src="~/assets/images/iconos/codigo.png" class="avatar avatar-sm me-3 border-radius-lg" alt="Código de Referencia" />
                                                             </div>
                                                             <div class="d-flex flex-column justify-content-center">
-                                                                <label class="text-sm">Código de Referencia</label>
+                                                                <p class="text-xs text-secondary mb-0">Código de Referencia</p>
                                                             </div>
                                                         </div>
-
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            @if (string.IsNullOrWhiteSpace(Model.CodigoReferencia))
-                                                            {
-                                                                <input asp-for="CodigoReferencia" class="form-control" />
-                                                            }
-                                                            else
-                                                            {
-                                                                <input asp-for="CodigoReferencia" class="form-control" readonly />
-                                                            }
+                                                            <label asp-for="DatosPersonales.CodigoReferencia" class="form-label">Código de Referencia</label>
+                                                            <input asp-for="DatosPersonales.CodigoReferencia" class="form-control" (esEditable ? "" : "readonly") />
                                                         </div>
                                                     </td>
-                                                    <td class="align-middle text-center text-sm">
-                                                        @if (string.IsNullOrWhiteSpace(Model.CodigoReferencia))
-                                                        {
-                                                            <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
-                                                        }
-                                                        else
-                                                        {
-                                                            <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
-                                                        }
-                                                    </td>
-                                                </tr>
+                                                </tr> 
+                                                
 
                                                 <!-- EstadoUsuario -->
                                                 <tr>
@@ -361,7 +339,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input class="form-control" value="@(Model.EstadoUsuario == 1 ? "Habilitado" : Model.EstadoUsuario.ToString())" readonly />
+                                                            <input class="form-control" value="@(Model.DatosPersonales.EstadoUsuario == 1 ? "Habilitado" : Model.DatosPersonales.EstadoUsuario.ToString())" readonly />
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
@@ -385,7 +363,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="FechaRegistro" class="form-control" readonly />
+                                                            <input asp-for="DatosPersonales.FechaRegistro" class="form-control" readonly />
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
@@ -407,13 +385,13 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="FechaHabilitacion" class="form-control" readonly />
+                                                            <input asp-for="DatosPersonales.FechaHabilitacion" class="form-control" readonly />
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
                                                         <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
                                                     </td>
-                                                </tr>
+                                                </tr> 
                                             </tbody>
                                         </table>
                                     </div>
