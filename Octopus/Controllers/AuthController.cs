@@ -95,7 +95,7 @@ namespace Octopus.Controllers
                         {
                             new Claim(ClaimTypes.Name, usuario.NombreCompleto), // Fix for CS1061: Use the correct property from Usuario
                             new Claim(ClaimTypes.Email, username),
-                            //new Claim(ClaimTypes.Role, usuario.Rol.Nombre) // Assuming Rol.Nombre exists
+                            //new Claim(ClaimTypes.Role, usuario.Rol.Tipo) // Assuming Rol.Tipo exists
                         };
 
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
