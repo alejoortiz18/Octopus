@@ -294,12 +294,12 @@
                                                         <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
                                                     </td>
                                                 </tr>
-                                                <!-- Email -->
+                                                <!-- Numero de cuenta -->
                                                 <tr>
                                                     <td>
                                                         <div class="d-flex px-2 py-1">
                                                             <div>
-                                                                <img src="~/assets/images/iconos/email.png" class="avatar avatar-sm me-3 border-radius-lg" alt="Documento" />
+                                                                <img src="~/assets/images/iconos/numeroCuenta.png" class="avatar avatar-sm me-3 border-radius-lg" alt="Documento" />
                                                             </div>
                                                             <div class="d-flex flex-column justify-content-center">
                                                                 <label class="text-sm">Numero de Cuenta</label>
@@ -315,95 +315,7 @@
                                                         <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
                                                     </td>
                                                 </tr>
- 
-                                                <!-- CodigoReferencia -->
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex px-2 py-1">
-                                                            <div>
-                                                                <img src="~/assets/images/iconos/codigo.png" class="avatar avatar-sm me-3 border-radius-lg" alt="Código de Referencia" />
-                                                            </div>
-                                                            <div class="d-flex flex-column justify-content-center">
-                                                                <p class="text-xs text-secondary mb-0">Código de Referencia</p>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="input-group input-group-outline my-3">
-                                                            <label asp-for="DatosPersonales.CodigoReferencia" class="form-label">Código de Referencia</label>
-                                                            <input asp-for="DatosPersonales.CodigoReferencia" class="form-control" (esEditable ? "" : "readonly") />
-                                                        </div>
-                                                    </td>
-                                                </tr> 
                                                 
-
-                                                <!-- EstadoUsuario -->
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex px-2 py-1">
-                                                            <div>
-                                                                <img src="~/assets/images/iconos/estadoUsuario.png" class="avatar avatar-sm me-3 border-radius-lg" alt="Documento" />
-                                                            </div>
-                                                            <div class="d-flex flex-column justify-content-center">
-                                                                <label class="text-sm">Estado del Usuario</label>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="input-group input-group-outline my-3">
-                                                            <input class="form-control" value="@(Model.DatosPersonales.EstadoUsuario == 1 ? "Habilitado" : Model.DatosPersonales.EstadoUsuario.ToString())" readonly />
-                                                        </div>
-                                                    </td>
-                                                    <td class="align-middle text-center text-sm">
-                                                        <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
-                                                    </td>
-                                                </tr>
-
-
-
-                                                <!-- FechaRegistro -->
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex px-2 py-1">
-                                                            <div>
-                                                                <img src="~/assets/images/iconos/Calendario.png" class="avatar avatar-sm me-3 border-radius-lg" alt="Documento" />
-                                                            </div>
-                                                            <div class="d-flex flex-column justify-content-center">
-                                                                <label class="text-sm">Fecha de Registro</label>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="DatosPersonales.FechaRegistro" class="form-control" readonly />
-                                                        </div>
-                                                    </td>
-                                                    <td class="align-middle text-center text-sm">
-                                                        <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
-                                                    </td>
-                                                </tr>
-
-                                                <!-- FechaHabilitacion -->
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex px-2 py-1">
-                                                            <div>
-                                                                <img src="~/assets/images/iconos/Calendario.png" class="avatar avatar-sm me-3 border-radius-lg" alt="Documento" />
-                                                            </div>
-                                                            <div class="d-flex flex-column justify-content-center">
-                                                                <label class="text-sm">Fecha de Habilitación</label>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="DatosPersonales.FechaHabilitacion" class="form-control" readonly />
-                                                        </div>
-                                                    </td>
-                                                    <td class="align-middle text-center text-sm">
-                                                        <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
-                                                    </td>
-                                                </tr> 
                                             </tbody>
                                         </table>
                                     </div>
