@@ -244,7 +244,7 @@
                                             <tbody>
                                               
 
-                                                <!-- NombreCompleto -->
+                                                <!-- Banco -->
                                                <tr>
                                                     <td>
                                                         <div class="d-flex px-2 py-1">
@@ -268,9 +268,33 @@
                                                     <td class="align-middle text-center text-sm">
                                                         <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
                                                     </td>
-                                                </tr> 
-
-                                                    <!-- Email -->
+                                                </tr>
+                                                <!-- Tipocuenta -->
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex px-2 py-1">
+                                                            <div>
+                                                                <img src="~/assets/images/iconos/banco.png" class="avatar avatar-sm me-3 border-radius-lg" alt="Nombre" />
+                                                            </div>
+                                                            <div class="d-flex flex-column justify-content-center">
+                                                                <label asp-for="TipoBancarios.Nombre" class="text-sm"></label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-outline my-3">
+                                                            <select asp-for="TipoBancarios.Nombre"
+                                                                    class="form-control"
+                                                                    asp-items="@(new SelectList(Model.TipoBancarios.Tipocuenta, "TipoCuentaBancariaId", "Nombre"))">
+                                                                <option value="">Seleccione un Tipo</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-middle text-center text-sm">
+                                                        <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
+                                                    </td>
+                                                </tr>
+                                                <!-- Email -->
                                                 <tr>
                                                     <td>
                                                         <div class="d-flex px-2 py-1">

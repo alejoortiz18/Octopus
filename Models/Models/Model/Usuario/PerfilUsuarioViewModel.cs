@@ -7,6 +7,7 @@ namespace Models.Model.Usuario
     {
         public DatosPersonalesUsuarioDto DatosPersonales { get; set; } = new DatosPersonalesUsuarioDto();
         public DatosBancariosDto DatosBancarios { get; set; } = new DatosBancariosDto();
+        public TipoCuentaDto TipoBancarios { get; set; } = new TipoCuentaDto();
     }
 
 }

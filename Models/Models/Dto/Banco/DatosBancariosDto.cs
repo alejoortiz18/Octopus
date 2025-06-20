@@ -10,10 +10,10 @@ namespace Models.Dto.Banco
     public class DatosBancariosDto 
     {
         public int Banco { get; set; }
-        public int TipoCuentaBancariaId { get; set; }
-        public string? NumeroCuentaBancaria { get; set; }
         
         public List<BancoDto> Bancos { get; set; } = new List<BancoDto>();
+       
+
 
 
     }

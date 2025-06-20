@@ -41,6 +41,20 @@ namespace Octopus.Controllers
                 }
                 // Puede agregar más bancos aquí según sea necesario
             };
+            List<DetalleTipoCuenta> tipoCuenta = new List<DetalleTipoCuenta>
+            {
+                new DetalleTipoCuenta
+                {
+                    Nombre = "Corriente",
+                    
+                },
+                new DetalleTipoCuenta
+                {
+                    Nombre = "Ahorros",
+
+                }
+                // Puede agregar más bancos aquí según sea necesario
+            };
 
             var model2 = new PerfilUsuarioViewModel
             {
@@ -49,8 +63,9 @@ namespace Octopus.Controllers
             };
 
             model2.DatosBancarios.Bancos.AddRange(bancos);
+            model2.TipoBancarios.Tipocuenta.AddRange(tipoCuenta);
 
-            
+
             return View(model2);
         }
 
