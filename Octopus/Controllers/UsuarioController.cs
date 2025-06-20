@@ -46,11 +46,12 @@ namespace Octopus.Controllers
                 new DetalleTipoCuenta
                 {
                     Nombre = "Corriente",
-                    
+                 TipoCuentaBancariaId = 1   
                 },
                 new DetalleTipoCuenta
                 {
-                    Nombre = "Ahorros",
+                 TipoCuentaBancariaId = 2,
+                    Nombre = "Ahorros"
 
                 }
                 // Puede agregar más bancos aquí según sea necesario
@@ -75,7 +76,7 @@ namespace Octopus.Controllers
             // Accede a model.DatosPersonales y model.DatosBancarios
             // Procesar y guardar los datos
 
-            return RedirectToAction("PerfilUsuario");
+            return RedirectToAction("Profile");
         }
     }
 }
