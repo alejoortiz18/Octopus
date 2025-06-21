@@ -14,5 +14,6 @@ namespace Data.Interfaces
         /// </summary>
         /// <returns>Lista de bancos.</returns>
         List<Banco> ObtenerBancos();
+        List<TipoCuentaBancarium> GetListTipoCuenta();
     }
 }

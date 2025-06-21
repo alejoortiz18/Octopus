@@ -21,5 +21,10 @@ namespace Data.Repository
         {
             return _context.Bancos.ToList();
         }
+
+        public List<TipoCuentaBancarium> GetListTipoCuenta()
+        {
+            return _context.TipoCuentaBancaria.ToList();
+        }
     }
 }

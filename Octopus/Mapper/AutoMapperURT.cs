@@ -10,7 +10,7 @@ namespace Octopus.Mapper
         {
             CreateMap<Banco, BancoDto>()
             .ForMember(dest => dest.Activo, opt => opt.MapFrom(src => src.Activo ?? false));
-            //CreateMap<Sesione, List<SesionDto>>();
+            CreateMap<TipoCuentaBancarium, DetalleTipoCuenta>();
             //CreateMap<Sesione, SesionDto>();
             //CreateMap<SesionDto, Sesione>();
             //CreateMap<Usuario, UsuarioDto>();

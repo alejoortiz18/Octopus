@@ -51,24 +51,8 @@ namespace Octopus.Controllers
 
             var listBancosResult = _bancosBusiness.ObtenerBancos();
             var listBancos = _mapper.Map<List<BancoDto>>(listBancosResult);
-
-        
-
-            List<DetalleTipoCuenta> tipoCuenta = new List<DetalleTipoCuenta>
-            {
-                new DetalleTipoCuenta
-                {
-                    Nombre = "Corriente",
-                 TipoCuentaBancariaId = 1   
-                },
-                new DetalleTipoCuenta
-                {
-                 TipoCuentaBancariaId = 2,
-                    Nombre = "Ahorros"
-
-                }
-                // Puede agregar más bancos aquí según sea necesario
-            };
+            var listTipoCuenta = _bancosBusiness.GetListTipoCuenta();
+            List<DetalleTipoCuenta> tipoCuenta = _mapper.Map<List<DetalleTipoCuenta>>(listTipoCuenta);
 
             var model2 = new PerfilUsuarioViewModel
             {

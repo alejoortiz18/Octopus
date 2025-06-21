@@ -12,6 +12,11 @@ namespace Business.BancosBusiness
             _bancosRepository = bancosRepository;
         }
 
+        public List<TipoCuentaBancarium> GetListTipoCuenta()
+        {
+            return _bancosRepository.GetListTipoCuenta();
+        }
+
         public List<Banco> ObtenerBancos()
         {
             return _bancosRepository.ObtenerBancos();
