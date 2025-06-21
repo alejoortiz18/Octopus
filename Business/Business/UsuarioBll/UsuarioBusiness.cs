@@ -39,7 +39,7 @@ namespace Business.UsuarioBll
             return _usuarioRepository.ActualizarUsuarioAsync(usuario);
         }
 
-        public Usuario ObtenerPorId(Guid Id)
+        public Usuario ObtenerPorId(int Id)
         {
             return _usuarioRepository.ObtenerPorId(Id);
         }
@@ -64,6 +64,9 @@ namespace Business.UsuarioBll
         {
            return _usuarioRepository.Save(usuario);
 
+        }
+        public Usuario ObtenerCuentaApoyo() { 
+            return _usuarioRepository.ObtenerCuentaApoyo();
         }
     }
 }

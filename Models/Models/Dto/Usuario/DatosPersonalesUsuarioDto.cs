@@ -7,6 +7,9 @@ namespace Models.Dto.Usuario
     {
         public int Rol { get; set; }
         public string CodigoReferencia { get; set; } = "";
+        public string CodigoReferente { get; set; } = "";
+        public int ReferenteId { get; set; }
+
         public int EstadoUsuario { get; set; }
         public int TipoDocumento { get; set; }
         public string NumeroDocumento { get; set; } = "";

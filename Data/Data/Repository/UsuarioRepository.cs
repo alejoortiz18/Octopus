@@ -111,6 +111,7 @@ namespace Data.Repository
                 usuarioExistente.Email = usuario.Email;
                 usuarioExistente.NumeroCelular = usuario.NumeroCelular;
                 usuarioExistente.CodigoReferencia = usuario.CodigoReferencia;
+                usuarioExistente.ReferenteId= usuario.ReferenteId;
                 _context.Usuarios.Update(usuarioExistente);
                 _context.SaveChanges();
                 return true;
@@ -124,14 +125,19 @@ namespace Data.Repository
         }
 
 
-        public Usuario ObtenerPorId(Guid Id)
+        public Usuario ObtenerPorId(int Id)
         {
-            throw new NotImplementedException();
+            return _context.Usuarios.FirstOrDefault(u => u.UsuarioId == Id);
         }
 
         public Usuario ObtenerPorCodigoReferencia(string codigoReferencia)
         {
             return _context.Usuarios.FirstOrDefault(u => u.CodigoReferencia == codigoReferencia);
+        }
+
+        public Usuario ObtenerCuentaApoyo()
+        {
+            return _context.Usuarios.FirstOrDefault(u => u.Email == "apoyo@yopmail.com");
         }
     }
 }

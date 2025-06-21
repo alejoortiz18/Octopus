@@ -17,8 +17,8 @@ namespace Data.Interfaces
         Task<bool> ActualizarUsuarioAsync(Usuario usuario);
         Task<bool> ActualizarUsuarioAsync(DatosPersonalesUsuarioDto usuario);
 
-
-        Usuario ObtenerPorId(Guid Id);
+        public Usuario ObtenerCuentaApoyo();
+        Usuario ObtenerPorId(int Id);
 
         (bool,Usuario) ReenviarCodigo(EnabledUserDto modelUser);
 

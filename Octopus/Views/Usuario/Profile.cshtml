@@ -226,24 +226,53 @@
                                                                 <img src="~/assets/images/iconos/referente.png" class="avatar avatar-sm me-3 border-radius-lg" alt="Documento" />
                                                             </div>
                                                             <div class="d-flex flex-column justify-content-center">
+                                                                <label class="text-sm">Mi Código</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-outline my-3">
+                                                            <input asp-for="DatosPersonales.CodigoReferencia" class="form-control" id="codigoReferenciaInput" />
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-middle text-center text-sm">
+                                                        @if (string.IsNullOrWhiteSpace(Model.DatosPersonales.CodigoReferencia))
+                                                        {
+                                                            <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+
+                                                <!-- CodigoReferente -->
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex px-2 py-1">
+                                                            <div>
+                                                                <img src="~/assets/images/iconos/referente.png" class="avatar avatar-sm me-3 border-radius-lg" alt="Documento" />
+                                                            </div>
+                                                            <div class="d-flex flex-column justify-content-center">
                                                                 <label class="text-sm">Código de Referencia</label>
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            @if (string.IsNullOrWhiteSpace(Model.DatosPersonales.CodigoReferencia))
+                                                            @if (string.IsNullOrWhiteSpace(Model.DatosPersonales.CodigoReferente))
                                                             {
-                                                                <input asp-for="DatosPersonales.CodigoReferencia" class="form-control" id="codigoReferenciaInput" />
+                                                                <input asp-for="DatosPersonales.CodigoReferente" class="form-control" id="codigoReferenteInput" />
                                                             }
                                                             else
                                                             {
-                                                                <input asp-for="DatosPersonales.CodigoReferencia" class="form-control" readonly id="codigoReferenciaInput" />
+                                                                <input asp-for="DatosPersonales.CodigoReferente" class="form-control" readonly id="codigoReferenteInput" />
                                                             }
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
-                                                        @if (string.IsNullOrWhiteSpace(Model.DatosPersonales.CodigoReferencia))
+                                                        @if (string.IsNullOrWhiteSpace(Model.DatosPersonales.CodigoReferente))
                                                         {
                                                             <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
                                                         }
@@ -354,7 +383,7 @@
                                 <script>
                                     document.addEventListener("DOMContentLoaded", function () {
                                         var form = document.getElementById('perfilForm');
-                                        var codigoReferenciaInput = document.getElementById('codigoReferenciaInput');
+                                        var codigoReferenciaInput = document.getElementById('codigoReferenteInput');
                                         var modal = new bootstrap.Modal(document.getElementById('codigoReferenciaModal'));
                                         var confirmarBtn = document.getElementById('confirmarCodigoReferencia');
                                         var cancelarBtn = document.getElementById('cancelarCodigoReferencia');

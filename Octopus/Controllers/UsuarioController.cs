@@ -35,7 +35,8 @@ namespace Octopus.Controllers
             
             string? userEmail = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
 
-            if (primerInicio.Equals(true))
+            Usuario resultUser = _usuarioBusiness.ObtenerPorEmail(userEmail);
+            if (primerInicio.Equals(true) && resultUser.ReferenteId == null)
             {
                 ViewData["MensajeReferente"] = UsuarioMsnConstant.CodigoReferenteIsNull;
             }
@@ -45,7 +46,6 @@ namespace Octopus.Controllers
                 ViewData["NoExisteCodigo"] = UsuarioMsnConstant.CodigoReferenteNoExiste;               
             }
 
-            Usuario resultUser = _usuarioBusiness.ObtenerPorEmail(userEmail);
 
             var model = new DatosPersonalesUsuarioDto
             {
@@ -59,6 +59,13 @@ namespace Octopus.Controllers
                 FechaRegistro = resultUser.FechaRegistro,
                 FechaHabilitacion = (DateTime)resultUser.FechaHabilitacion
             };
+
+            if (resultUser.ReferenteId !=null)
+            {
+                var cod = _usuarioBusiness.ObtenerPorId((int)resultUser.ReferenteId);
+                model.CodigoReferente = cod.CodigoReferencia;
+
+            }
 
             var listBancosResult = _bancosBusiness.ObtenerBancos();
             var listBancos = _mapper.Map<List<BancoDto>>(listBancosResult);
@@ -81,7 +88,7 @@ namespace Octopus.Controllers
         [HttpPost]
         public IActionResult ActualizarPerfil(PerfilUsuarioViewModel model)
         {
-            Usuario responseUser = _usuarioBusiness.ObtenerPorCodigoReferencia(model.DatosPersonales.CodigoReferencia);
+            Usuario responseUser = _usuarioBusiness.ObtenerPorCodigoReferencia(model.DatosPersonales.CodigoReferente);
             if (responseUser == null) { 
 
                 TempData["NoExisteCodigo"] =1;
@@ -91,10 +98,12 @@ namespace Octopus.Controllers
 
             if (model.ActualizarDatosPersonales)
             {
-                string codigoReferencia = _codigoHelper.GenerarCodigoUnico();
+                if (model.DatosPersonales.CodigoReferente ==null)
+                {
+                    model.DatosPersonales.ReferenteId = _usuarioBusiness.ObtenerCuentaApoyo().UsuarioId;
 
-                model.DatosPersonales.CodigoReferencia = string.IsNullOrEmpty(model.DatosPersonales.CodigoReferencia)?
-                                                         _codigoHelper.GenerarCodigoUnico() : model.DatosPersonales.CodigoReferencia;
+                }
+                    
                 var resultSave = _usuarioBusiness.ActualizarUsuarioAsync(model.DatosPersonales);
             }
 
