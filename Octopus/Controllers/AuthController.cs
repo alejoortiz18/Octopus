@@ -109,7 +109,7 @@ namespace Octopus.Controllers
                         properties: authProperties
                     );
 
-                    if (loginExitoso.usuario.CodigoReferencia == null)
+                    if (loginExitoso.usuario.ReferenteId == null)
                     {
                         return RedirectToAction("Profile", "Usuario", new { primerInicio = true });
                     }

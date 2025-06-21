@@ -34,6 +34,11 @@ namespace Business.UsuarioBll
             return _usuarioRepository.ActualizarUsuarioAsync(usuario);
         }
 
+        public Task<bool> ActualizarUsuarioAsync(DatosPersonalesUsuarioDto usuario)
+        {
+            return _usuarioRepository.ActualizarUsuarioAsync(usuario);
+        }
+
         public Usuario ObtenerPorId(Guid Id)
         {
             return _usuarioRepository.ObtenerPorId(Id);
@@ -50,5 +55,15 @@ namespace Business.UsuarioBll
 
         }
 
+        public Usuario ObtenerPorCodigoReferencia(string codigoReferencia)
+        {
+            return _usuarioRepository.ObtenerPorCodigoReferencia(codigoReferencia);
+        }
+
+        public bool Save(Usuario usuario)
+        {
+           return _usuarioRepository.Save(usuario);
+
+        }
     }
 }

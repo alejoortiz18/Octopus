@@ -30,8 +30,34 @@
     </script>
 }
 
+@if (!string.IsNullOrWhiteSpace(ViewData["NoExisteCodigo"] as string))
+{
+    <div class="modal fade" id="mensajeReferenteModalNoexiste" tabindex="-1" aria-labelledby="mensajeReferenteLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-warning">
+                <div class="modal-header bg-warning bg-gradient">
+                    <h5 class="modal-title text-dark" id="mensajeReferenteLabel">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>Advertencia
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-dark">
+                    @ViewData["NoExisteCodigo"]
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var modal = new bootstrap.Modal(document.getElementById('mensajeReferenteModalNoexiste'));
+            modal.show();
+        });
+    </script>
+}
 
-<!-- ...el resto del archivo permanece igual... -->
 
 <div>
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true" style="place-self: center;">
@@ -63,8 +89,18 @@
                                     <div class="table-responsive p-0">
                                         <table class="table align-items-center mb-0">
                                             <tbody>
+
+                                                @{
+                                                    Model.ActualizarDatosBancarios = false;
+                                                    Model.ActualizarDatosPersonales = true;
+                                                }
+
                                                 <!-- NumeroDocumento -->
                                                 <input asp-for="UsuarioId" type="hidden" readonly />
+                                                <input asp-for="ActualizarDatosBancarios" type="hidden" readonly />
+                                                <input asp-for="ActualizarDatosPersonales" type="hidden" readonly />
+                                                
+
                                                 <tr>
                                                     <td>
                                                         <div class="d-flex px-2 py-1">
@@ -172,7 +208,9 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="DatosPersonales.NumeroCelular" class="form-control" />
+                                                            <input name="DatosPersonales.NumeroCelular"
+                                                                   class="form-control"
+                                                                   value="@(string.IsNullOrEmpty(Model.DatosPersonales.NumeroCelular) ? "" : Model.DatosPersonales.NumeroCelular)" />
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
@@ -374,7 +412,15 @@
                                     <div class="table-responsive p-0">
                                         <table class="table align-items-center mb-0">
                                             <tbody>
-                                              
+                                                @{
+                                                    Model.ActualizarDatosBancarios = true;
+                                                    Model.ActualizarDatosPersonales = false;
+                                                }
+
+                                                <!-- NumeroDocumento -->
+                                                <input asp-for="UsuarioId" type="hidden" readonly />
+                                                <input asp-for="ActualizarDatosBancarios" type="hidden" readonly />
+                                                <input asp-for="ActualizarDatosPersonales" type="hidden" readonly />
 
                                                 <!-- Banco -->
                                                 <tr>

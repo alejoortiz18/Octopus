@@ -105,11 +105,12 @@ namespace Business.AuthBusiness
                 ContrasenaHash = hash,
                 ContrasenaSalt = salt,
                 FechaRegistro = DateTime.Now,
-                EstadoUsuarioId = 1, 
+                EstadoUsuarioId = 1,
                 TipoDocumentoId = 1,
+                CodigoReferencia = _codigoHelper.GenerarCodigoUnico(),
                 RolId = 1,
                 TokenVerificacion = _codigoHelper.GenerarCodigoUnico(),
-                FechaExpiracionToken = DateTime.Now.AddHours(2), 
+                FechaExpiracionToken = DateTime.Now.AddHours(2),
                 // Generar un código de referencia único
                 // Agrega más campos si es necesario
             };

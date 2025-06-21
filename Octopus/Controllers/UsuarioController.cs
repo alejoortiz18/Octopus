@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Business.Interfaces;
 using Constant;
+using Helpers.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dto.Banco;
@@ -14,20 +15,24 @@ namespace Octopus.Controllers
     [Authorize]
     public class UsuarioController : Controller
     {
-        private readonly IUsuarioBusiness _usuarioMsnConstant;
+        private readonly IUsuarioBusiness _usuarioBusiness;
         private readonly IBancosBusiness _bancosBusiness;
         private readonly IMapper _mapper;
+        private readonly ICodigoHelper _codigoHelper;
 
 
-        public UsuarioController(IUsuarioBusiness usuarioBusiness, IBancosBusiness bancosBusiness, IMapper mapper)
+        public UsuarioController(IUsuarioBusiness usuarioBusiness, IBancosBusiness bancosBusiness, IMapper mapper,ICodigoHelper codHelper)
         {
-            _usuarioMsnConstant = usuarioBusiness;
+            _usuarioBusiness = usuarioBusiness;
             _bancosBusiness = bancosBusiness;
             _mapper = mapper;
+            _codigoHelper = codHelper;
         }
 
         public IActionResult Profile(bool? primerInicio =false)
         {
+            
+            
             string? userEmail = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
 
             if (primerInicio.Equals(true))
@@ -35,7 +40,12 @@ namespace Octopus.Controllers
                 ViewData["MensajeReferente"] = UsuarioMsnConstant.CodigoReferenteIsNull;
             }
 
-            Usuario resultUser = _usuarioMsnConstant.ObtenerPorEmail(userEmail);
+            if (TempData["NoExisteCodigo"] != null && Convert.ToInt32(TempData["NoExisteCodigo"]) == 1)
+            {
+                ViewData["NoExisteCodigo"] = UsuarioMsnConstant.CodigoReferenteNoExiste;               
+            }
+
+            Usuario resultUser = _usuarioBusiness.ObtenerPorEmail(userEmail);
 
             var model = new DatosPersonalesUsuarioDto
             {
@@ -45,6 +55,7 @@ namespace Octopus.Controllers
                 NumeroDocumento = resultUser.NumeroDocumento==null?"": resultUser.NumeroDocumento,
                 NombreCompleto = resultUser.NombreCompleto == null || resultUser.NombreCompleto==""? resultUser.Email: resultUser.NombreCompleto,
                 Email = resultUser.Email,
+                NumeroCelular = resultUser.NumeroCelular,
                 FechaRegistro = resultUser.FechaRegistro,
                 FechaHabilitacion = (DateTime)resultUser.FechaHabilitacion
             };
@@ -70,10 +81,25 @@ namespace Octopus.Controllers
         [HttpPost]
         public IActionResult ActualizarPerfil(PerfilUsuarioViewModel model)
         {
-            // Accede a model.DatosPersonales y model.DatosBancarios
-            // Procesar y guardar los datos
+            Usuario responseUser = _usuarioBusiness.ObtenerPorCodigoReferencia(model.DatosPersonales.CodigoReferencia);
+            if (responseUser == null) { 
 
-            return RedirectToAction("Profile");
+                TempData["NoExisteCodigo"] =1;
+                return RedirectToAction("Profile");
+
+            }
+
+            if (model.ActualizarDatosPersonales)
+            {
+                string codigoReferencia = _codigoHelper.GenerarCodigoUnico();
+
+                model.DatosPersonales.CodigoReferencia = string.IsNullOrEmpty(model.DatosPersonales.CodigoReferencia)?
+                                                         _codigoHelper.GenerarCodigoUnico() : model.DatosPersonales.CodigoReferencia;
+                var resultSave = _usuarioBusiness.ActualizarUsuarioAsync(model.DatosPersonales);
+            }
+
+
+            return RedirectToAction("Profile", new { primerInicio = true });
         }
     }
 }

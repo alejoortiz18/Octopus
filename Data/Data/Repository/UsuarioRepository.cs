@@ -25,13 +25,14 @@ namespace Data.Repository
         {
             return  _context.Usuarios.FirstOrDefault(u => u.Email == email);
         }
+
+
                 
 
         public bool Save(Usuario user)
         {
             try
             {
-
                 var result = _context.Usuarios.Add(user);
                 var saveresult = _context.SaveChanges() > 0;
                 return saveresult;
@@ -82,7 +83,8 @@ namespace Data.Repository
                 usuarioExistente.TokenVerificacion = usuario.TokenVerificacion;
                 usuarioExistente.FechaExpiracionToken = usuario.FechaExpiracionToken;
                 usuarioExistente.FechaHabilitacion = usuario.FechaHabilitacion;
-                await _context.SaveChangesAsync();
+                _context.Usuarios.Update(usuarioExistente);
+                _context.SaveChanges();
                 return true;
             }
             catch (Exception)
@@ -93,11 +95,43 @@ namespace Data.Repository
          
         }
 
+        public async Task<bool> ActualizarUsuarioAsync(DatosPersonalesUsuarioDto usuario)
+        {
+            try
+            {
+                var usuarioExistente = _context.Usuarios
+                    .FirstOrDefault(u => u.Email == usuario.Email);
+
+                if (usuarioExistente == null)
+                {
+                    return false;
+                }
+                usuarioExistente.NumeroDocumento = usuario.NumeroDocumento;
+                usuarioExistente.NombreCompleto = usuario.NombreCompleto;
+                usuarioExistente.Email = usuario.Email;
+                usuarioExistente.NumeroCelular = usuario.NumeroCelular;
+                usuarioExistente.CodigoReferencia = usuario.CodigoReferencia;
+                _context.Usuarios.Update(usuarioExistente);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+
+        }
+
 
         public Usuario ObtenerPorId(Guid Id)
         {
             throw new NotImplementedException();
         }
 
+        public Usuario ObtenerPorCodigoReferencia(string codigoReferencia)
+        {
+            return _context.Usuarios.FirstOrDefault(u => u.CodigoReferencia == codigoReferencia);
+        }
     }
 }

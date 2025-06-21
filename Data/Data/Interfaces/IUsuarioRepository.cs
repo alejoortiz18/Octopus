@@ -13,11 +13,15 @@ namespace Data.Interfaces
         bool Save(Usuario user);
 
         Usuario ObtenerPorEmail(string email);
-
+        Usuario ObtenerPorCodigoReferencia(string codigoReferencia);
         Task<bool> ActualizarUsuarioAsync(Usuario usuario);
-                
+        Task<bool> ActualizarUsuarioAsync(DatosPersonalesUsuarioDto usuario);
+
+
         Usuario ObtenerPorId(Guid Id);
 
         (bool,Usuario) ReenviarCodigo(EnabledUserDto modelUser);
+
+        
     }
 }
