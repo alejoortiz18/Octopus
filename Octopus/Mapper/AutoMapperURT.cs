@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Models.Dto.Banco;
+using Models.Entities.Domain.DBOctopus.OctopusEntities;
 
 namespace Octopus.Mapper
 {
@@ -6,7 +8,7 @@ namespace Octopus.Mapper
     {
         public AutoMapperURT()
         {
-            //CreateMap<ResetPasswordResponseDto, UserCod>();
+            //CreateMap<List<Banco>, List<BancoDto>>();
             //CreateMap<Sesione, List<SesionDto>>();
             //CreateMap<Sesione, SesionDto>();
             //CreateMap<SesionDto, Sesione>();

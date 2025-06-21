@@ -1,33 +1,56 @@
-﻿using Constant;
+﻿using AutoMapper;
+using Business.Interfaces;
+using Constant;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dto.Banco;
 using Models.Dto.Usuario;
+using Models.Entities.Domain.DBOctopus.OctopusEntities;
 using Models.Model.Usuario;
+using System.Security.Claims;
 
 namespace Octopus.Controllers
 {
     [Authorize]
     public class UsuarioController : Controller
     {
+        private readonly IUsuarioBusiness _usuarioMsnConstant;
+        private readonly IBancosBusiness _bancosBusiness;
+        private readonly IMapper _mapper;
+
+
+        public UsuarioController(IUsuarioBusiness usuarioBusiness, IBancosBusiness bancosBusiness, IMapper mapper)
+        {
+            _usuarioMsnConstant = usuarioBusiness;
+            _bancosBusiness = bancosBusiness;
+            _mapper = mapper;
+        }
+
         public IActionResult Profile(bool? primerInicio =false)
         {
+            string? userEmail = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+
             if (primerInicio.Equals(true))
             {
                 ViewData["MensajeReferente"] = UsuarioMsnConstant.CodigoReferenteIsNull;
             }
 
+            Usuario resultUser = _usuarioMsnConstant.ObtenerPorEmail(userEmail);
+
             var model = new DatosPersonalesUsuarioDto
             {
-                CodigoReferencia = "",
-                EstadoUsuario = 1,
-                TipoDocumento = 1,
-                NumeroDocumento = "123456789",
-                NombreCompleto = "Alexa Liras",
-                Email = "alexa@creative-tim.com",
-                FechaRegistro = DateTime.Now.AddMonths(-2),
-                FechaHabilitacion = DateTime.Now.AddDays(-10)
+                CodigoReferencia = resultUser.CodigoReferencia ==null?"": resultUser.CodigoReferencia,
+                EstadoUsuario = resultUser.EstadoUsuario==null?0: resultUser.EstadoUsuario.EstadoUsuarioId,
+                TipoDocumento = resultUser.EstadoUsuarioId,
+                NumeroDocumento = resultUser.NumeroDocumento==null?"": resultUser.NumeroDocumento,
+                NombreCompleto = resultUser.NombreCompleto == null || resultUser.NombreCompleto==""? resultUser.Email: resultUser.NombreCompleto,
+                Email = resultUser.Email,
+                FechaRegistro = resultUser.FechaRegistro,
+                FechaHabilitacion = (DateTime)resultUser.FechaHabilitacion
             };
+
+            //var bancos = _bancosBusiness.ObtenerBancos();
+            // var listBancos = _mapper.Map<List<BancoDto>>(bancos);
 
             List<BancoDto> bancos = new List<BancoDto>
             {
@@ -47,6 +70,7 @@ namespace Octopus.Controllers
                 }
                 // Puede agregar más bancos aquí según sea necesario
             };
+
             List<DetalleTipoCuenta> tipoCuenta = new List<DetalleTipoCuenta>
             {
                 new DetalleTipoCuenta

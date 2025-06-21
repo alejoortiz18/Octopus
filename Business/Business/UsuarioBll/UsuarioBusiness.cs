@@ -5,11 +5,6 @@ using Data.Interfaces;
 using Helpers.Interfaces;
 using Models.Dto.Usuario;
 using Models.Entities.Domain.DBOctopus.OctopusEntities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.UsuarioBll
 {
@@ -45,7 +40,7 @@ namespace Business.UsuarioBll
 
         public bool ReenviarCodigo(EnabledUserDto modelUser)
         {
-            var ( result,User) = _usuarioRepository.ReenviarCodigo(modelUser);
+            var (result, User) = _usuarioRepository.ReenviarCodigo(modelUser);
             if (result)
             {
                 _email.EnviarCorreoCrearUsuarioNuevoAsync(User, EmailConstant.AsuntoRestablecerCodigo, EmailConstant.CuerpoRestablecerCodigo);

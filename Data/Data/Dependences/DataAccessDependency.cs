@@ -13,9 +13,9 @@ namespace Data.Dependences
 
             #region [ Repository Data Access ]
 
-            //services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
-            //services.AddScoped<ISesionesRepository, SesionesRepository>();
+            services.AddScoped<IBancosRepository, BancoRepository>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             //services.AddScoped<ISeriesRepository, SeriesRepository>();
             //services.AddScoped<INadadorXEntrenadorRepository, NadadorXEntrenadorRepository>();
             //services.AddScoped<IUsuarioXSesionRepository, UsuarioXSesionRepository>();

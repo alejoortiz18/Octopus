@@ -6,7 +6,7 @@ using Data.Repository;
 using Helpers.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using perfil = Business.AuthBusiness;
-
+using Bancos =  Business.BancosBusiness;
 
 namespace Business.Dependences
 {
@@ -19,9 +19,9 @@ namespace Business.Dependences
 
             services.AddScoped<IAuthBusiness, perfil.AuthBusiness>();
             services.AddScoped<IAuthRepository, AuthRepository>();
-            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IBancosRepository, BancoRepository>();
             services.AddScoped<IUsuarioBusiness, UsuarioBusiness>();
-            // services.AddScoped<INadadorXEntrenadorBusiness, NadadorXEntrenadorBusiness>();
+            services.AddScoped<IBancosBusiness, Bancos.BancosBusiness>();
             // services.AddScoped<IUsuarioXSesionBusiness, UsuarioXSesionBusiness>();
             // services.AddScoped<ITipoEntrenamientoBusiness, TipoEntrenamientoBusiness>();
             // services.AddScoped<IPerfilBusiness, perfil.PerfilBusiness>();
