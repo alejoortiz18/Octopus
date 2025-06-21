@@ -58,7 +58,7 @@
                     <div class="table-responsive p-0">
                         <table class="table align-items-center justify-content-center mb-0">
                            
-                            <form asp-action="ActualizarPerfil" asp-controller="Usuario" method="post">
+                            <form asp-action="ActualizarPerfil" asp-controller="Usuario" method="post" id="perfilForm">
                                 <div class="card-body px-0 pb-2">
                                     <div class="table-responsive p-0">
                                         <table class="table align-items-center mb-0">
@@ -78,11 +78,25 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="DatosPersonales.NumeroDocumento" class="form-control" readonly />
+                                                            @if (string.IsNullOrEmpty(Model.DatosPersonales.NumeroDocumento))
+                                                            {
+                                                                <input asp-for="DatosPersonales.NumeroDocumento" class="form-control" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <input asp-for="DatosPersonales.NumeroDocumento" class="form-control" readonly />
+                                                            }
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
-                                                        <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
+                                                        @if (string.IsNullOrEmpty(Model.DatosPersonales.NumeroDocumento))
+                                                        {
+                                                            <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
+                                                        }
                                                     </td>
                                                 </tr>
 
@@ -100,11 +114,25 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="DatosPersonales.NombreCompleto" class="form-control" />
+                                                            @if (string.IsNullOrEmpty(Model.DatosPersonales.NombreCompleto))
+                                                            {
+                                                                <input asp-for="DatosPersonales.NombreCompleto" class="form-control" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <input asp-for="DatosPersonales.NombreCompleto" class="form-control" readonly />
+                                                            }
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
-                                                        <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
+                                                        @if (string.IsNullOrEmpty(Model.DatosPersonales.NombreCompleto))
+                                                        {
+                                                            <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
+                                                        }
                                                     </td>
                                                 </tr>
 
@@ -129,6 +157,28 @@
                                                         <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
                                                     </td>
                                                 </tr>
+                                                <!-- Numero ceular -->
+
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex px-2 py-1">
+                                                            <div>
+                                                                <img src="~/assets/images/logos/celular.png" class="avatar avatar-sm me-3 border-radius-lg" alt="Número de celular" />
+                                                            </div>
+                                                            <div class="d-flex flex-column justify-content-center">
+                                                                <label class="text-sm">Número de Celular</label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-outline my-3">
+                                                            <input asp-for="DatosPersonales.NumeroCelular" class="form-control" />
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-middle text-center text-sm">
+                                                        <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
+                                                    </td>
+                                                </tr>
 
                                                 <!-- CodigoReferencia -->
                                                 <tr>
@@ -141,18 +191,16 @@
                                                                 <label class="text-sm">Código de Referencia</label>
                                                             </div>
                                                         </div>
-                                                      
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            
                                                             @if (string.IsNullOrWhiteSpace(Model.DatosPersonales.CodigoReferencia))
                                                             {
-                                                                <input asp-for="DatosPersonales.CodigoReferencia" class="form-control" />
+                                                                <input asp-for="DatosPersonales.CodigoReferencia" class="form-control" id="codigoReferenciaInput" />
                                                             }
                                                             else
                                                             {
-                                                                <input asp-for="DatosPersonales.CodigoReferencia" class="form-control" readonly />
+                                                                <input asp-for="DatosPersonales.CodigoReferencia" class="form-control" readonly id="codigoReferenciaInput" />
                                                             }
                                                         </div>
                                                     </td>
@@ -179,7 +227,7 @@
                                                                 <label class="text-sm">Estado del Usuario</label>
                                                             </div>
                                                         </div>
-                                                     </td>
+                                                    </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
                                                             <input class="form-control" value="@(Model.DatosPersonales.EstadoUsuario == 1 ? "Habilitado" : Model.DatosPersonales.EstadoUsuario.ToString())" readonly />
@@ -189,8 +237,6 @@
                                                         <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
                                                     </td>
                                                 </tr>
-
-                                               
 
                                                 <!-- FechaRegistro -->
                                                 <tr>
@@ -245,6 +291,62 @@
                                 </div>
                             </form>
 
+                            <!-- Modal de confirmación para Código de Referencia -->
+                            <div class="modal fade" id="codigoReferenciaModal" tabindex="-1" aria-labelledby="codigoReferenciaModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content border-warning">
+                                        <div class="modal-header bg-warning bg-gradient">
+                                            <h5 class="modal-title text-dark" id="codigoReferenciaModalLabel">
+                                                <i class="bi bi-exclamation-triangle-fill me-2"></i>Advertencia
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                        </div>
+                                        <div class="modal-body text-dark">
+                                            RECUERDA QUE AL CONTINUAR SIN UN CÓDIGO DE REFERENCIA NO PODRÁ CAMBIARLO DESPUÉS, ¿DESEA CONTINUAR?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" id="cancelarCodigoReferencia" data-bs-dismiss="modal">No</button>
+                                            <button type="button" class="btn btn-warning" id="confirmarCodigoReferencia">Sí</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @section Scripts {
+                                <script>
+                                    document.addEventListener("DOMContentLoaded", function () {
+                                        var form = document.getElementById('perfilForm');
+                                        var codigoReferenciaInput = document.getElementById('codigoReferenciaInput');
+                                        var modal = new bootstrap.Modal(document.getElementById('codigoReferenciaModal'));
+                                        var confirmarBtn = document.getElementById('confirmarCodigoReferencia');
+                                        var cancelarBtn = document.getElementById('cancelarCodigoReferencia');
+                                        var submitAllowed = false;
+
+                                        form.addEventListener('submit', function (e) {
+                                            if (submitAllowed) {
+                                                submitAllowed = false;
+                                                return true;
+                                            }
+                                            var valor = codigoReferenciaInput ? codigoReferenciaInput.value.trim() : '';
+                                            if (!valor) {
+                                                e.preventDefault();
+                                                modal.show();
+                                            }
+                                        });
+
+                                        confirmarBtn.addEventListener('click', function () {
+                                            submitAllowed = true;
+                                            modal.hide();
+                                            form.submit();
+                                        });
+
+                                        cancelarBtn.addEventListener('click', function () {
+                                            submitAllowed = false;
+                                        });
+                                    });
+                                </script>
+                            }
+                            
                         </table>
                     </div>
                 </div>
@@ -275,7 +377,7 @@
                                               
 
                                                 <!-- Banco -->
-                                               <tr>
+                                                <tr>
                                                     <td>
                                                         <div class="d-flex px-2 py-1">
                                                             <div>
@@ -288,19 +390,39 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <select asp-for="DatosBancarios.Banco"
-                                                                    class="form-control"
-                                                                    asp-items="@(new SelectList(Model.DatosBancarios.Bancos, "BancoId", "Nombre"))">
-                                                                <option value="">Seleccione un banco</option>
-                                                            </select>
+                                                            @if (Model.DatosBancarios.Banco == 0)
+                                                            {
+                                                                <select asp-for="DatosBancarios.Banco"
+                                                                        class="form-control"
+                                                                        asp-items="@(new SelectList(Model.DatosBancarios.Bancos, "BancoId", "Nombre"))">
+                                                                    <option value="">Seleccione un banco</option>
+                                                                </select>
+                                                            }
+                                                            else
+                                                            {
+                                                                <select asp-for="DatosBancarios.Banco"
+                                                                        class="form-control"
+                                                                        asp-items="@(new SelectList(Model.DatosBancarios.Bancos, "BancoId", "Nombre"))"
+                                                                        disabled>
+                                                                    <option value="">Seleccione un banco</option>
+                                                                </select>
+                                                            }
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
-                                                        <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
+                                                        @if (Model.DatosBancarios.Banco == 0)
+                                                        {
+                                                            <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
+                                                        }
                                                     </td>
                                                 </tr>
+
                                                 <!-- Tipocuenta -->
-                                                <tr>
+                                               <tr>
                                                     <td>
                                                         <div class="d-flex px-2 py-1">
                                                             <div>
@@ -313,17 +435,32 @@
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <select asp-for="TipoBancarios.Nombre"
-                                                                    class="form-control"
-                                                                    asp-items="@(new SelectList(Model.TipoBancarios.Tipocuenta, "TipoCuentaBancariaId", "Nombre"))">
-                                                                <option value="">Seleccione un Tipo</option>
-                                                            </select>
+                                                            @if (string.IsNullOrEmpty(Model.TipoBancarios.Nombre))
+                                                            {
+                                                                <select asp-for="TipoBancarios.Nombre"
+                                                                        class="form-control"
+                                                                        asp-items="@(new SelectList(Model.TipoBancarios.Tipocuenta, "TipoCuentaBancariaId", "Nombre"))">
+                                                                    <option value="">Seleccione un Tipo</option>
+                                                                </select>
+                                                            }
+                                                            else
+                                                            {
+                                                                <input class="form-control" value="@Model.TipoBancarios.Nombre" readonly />
+                                                            }
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
-                                                        <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
+                                                        @if (string.IsNullOrEmpty(Model.TipoBancarios.Nombre))
+                                                        {
+                                                            <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
+                                                        }
                                                     </td>
                                                 </tr>
+
                                                 <!-- Numero de cuenta -->
                                                 <tr>
                                                     <td>
@@ -332,19 +469,34 @@
                                                                 <img src="~/assets/images/iconos/numeroCuenta.png" class="avatar avatar-sm me-3 border-radius-lg" alt="Documento" />
                                                             </div>
                                                             <div class="d-flex flex-column justify-content-center">
-                                                                <label class="text-sm">Numero de Cuenta</label>
+                                                                <label class="text-sm">Número de Cuenta</label>
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-outline my-3">
-                                                            <input asp-for="DatosBancarios.NumeroCuenta" class="form-control" />
+                                                            @if (string.IsNullOrEmpty(Model.DatosBancarios.NumeroCuenta))
+                                                            {
+                                                                <input asp-for="DatosBancarios.NumeroCuenta" class="form-control" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <input asp-for="DatosBancarios.NumeroCuenta" class="form-control" readonly />
+                                                            }
                                                         </div>
                                                     </td>
                                                     <td class="align-middle text-center text-sm">
-                                                        <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
+                                                        @if (string.IsNullOrEmpty(Model.DatosBancarios.NumeroCuenta))
+                                                        {
+                                                            <span class="badge badge-sm bg-gradient-warning">EDITABLE</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge badge-sm bg-gradient-success">NO EDITABLE</span>
+                                                        }
                                                     </td>
                                                 </tr>
+
                                                 
                                             </tbody>
                                         </table>
