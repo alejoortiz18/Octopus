@@ -8,7 +8,8 @@ namespace Octopus.Mapper
     {
         public AutoMapperURT()
         {
-            //CreateMap<List<Banco>, List<BancoDto>>();
+            CreateMap<Banco, BancoDto>()
+            .ForMember(dest => dest.Activo, opt => opt.MapFrom(src => src.Activo ?? false));
             //CreateMap<Sesione, List<SesionDto>>();
             //CreateMap<Sesione, SesionDto>();
             //CreateMap<SesionDto, Sesione>();
