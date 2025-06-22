@@ -19,6 +19,6 @@ namespace Models.Dto.Usuario
         [Display(Name = "Número Celular")]
         public string NumeroCelular { get; set; } = null;
         public DateTime FechaRegistro { get; set; }
-        public DateTime FechaHabilitacion { get; set; }
+        public DateTime? FechaHabilitacion { get; set; }
     }
 }

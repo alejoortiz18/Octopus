@@ -47,18 +47,23 @@ namespace Octopus.Controllers
             }
 
 
-            var model = new DatosPersonalesUsuarioDto
+            var model = new DatosPersonalesUsuarioDto();
+
+            
+            model.CodigoReferencia = resultUser.CodigoReferencia == null ? "" : resultUser.CodigoReferencia;
+            model.EstadoUsuario = resultUser.EstadoUsuario == null ? 0 : resultUser.EstadoUsuarioId;
+            model.TipoDocumento = resultUser.EstadoUsuarioId;
+            model.NumeroDocumento = resultUser.NumeroDocumento == null ? "" : resultUser.NumeroDocumento;
+            model.NombreCompleto = resultUser.NombreCompleto == null || resultUser.NombreCompleto == "" ? resultUser.Email : resultUser.NombreCompleto;
+            model.Email = resultUser.Email;
+            model.NumeroCelular = resultUser.NumeroCelular;
+            model.FechaRegistro = resultUser.FechaRegistro;
+            if (resultUser.FechaHabilitacion != null)
             {
-                CodigoReferencia = resultUser.CodigoReferencia ==null?"": resultUser.CodigoReferencia,
-                EstadoUsuario = resultUser.EstadoUsuario==null?0: resultUser.EstadoUsuario.EstadoUsuarioId,
-                TipoDocumento = resultUser.EstadoUsuarioId,
-                NumeroDocumento = resultUser.NumeroDocumento==null?"": resultUser.NumeroDocumento,
-                NombreCompleto = resultUser.NombreCompleto == null || resultUser.NombreCompleto==""? resultUser.Email: resultUser.NombreCompleto,
-                Email = resultUser.Email,
-                NumeroCelular = resultUser.NumeroCelular,
-                FechaRegistro = resultUser.FechaRegistro,
-                FechaHabilitacion = (DateTime)resultUser.FechaHabilitacion
-            };
+                model.FechaHabilitacion = (DateTime)resultUser.FechaHabilitacion;
+
+            }
+            
 
             if (resultUser.ReferenteId !=null)
             {
@@ -81,6 +86,7 @@ namespace Octopus.Controllers
             model2.DatosBancarios.Bancos.AddRange(listBancos);
 
             model2.DatosBancarios.Nombre = resultUser.Banco?.Nombre != null ? resultUser.Banco.Nombre : null;
+            model2.DatosBancarios.NumeroCuenta = resultUser.NumeroCuentaBancaria != null ? resultUser.NumeroCuentaBancaria : null;
             model2.TipoBancarios.Tipocuenta.AddRange(tipoCuenta);
             model2.TipoBancarios.Nombre = resultUser.TipoCuentaBancaria?.Nombre != null ? resultUser.TipoCuentaBancaria.Nombre : null;
             model2.UsuarioId = resultUser.UsuarioId;
@@ -122,12 +128,18 @@ namespace Octopus.Controllers
                 return RedirectToAction("Profile");
             }
 
-
-           resultUsuario.BancoId = model.DatosBancarios.Banco == null ? null: model.DatosBancarios.Banco;
-           resultUsuario.NumeroCuentaBancaria = model.DatosBancarios.NumeroCuenta ==null ? null: model.DatosBancarios.NumeroCuenta;
-           resultUsuario.TipoCuentaBancariaId = model.TipoBancarios.Nombre==""||
+            if (resultUsuario.BancoId == null )
+            {
+               resultUsuario.BancoId = model.DatosBancarios.Banco == null ? null: Convert.ToInt16( model.DatosBancarios.Nombre);
+            }
+            if (resultUsuario.TipoCuentaBancariaId == null )
+            {
+               resultUsuario.TipoCuentaBancariaId = model.TipoBancarios.Nombre==""||
                                                model.TipoBancarios.Nombre == null? null:
                                                                                    Convert.ToInt16( model.TipoBancarios.Nombre);
+            }
+            
+            resultUsuario.NumeroCuentaBancaria = model.DatosBancarios.NumeroCuenta ==null ? null: model.DatosBancarios.NumeroCuenta;
             _usuarioBusiness.ActualizarUsuarioAsync(resultUsuario);
 
             return RedirectToAction("Profile", new { primerInicio = true });
