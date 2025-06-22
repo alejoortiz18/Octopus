@@ -79,8 +79,11 @@ namespace Octopus.Controllers
             };
 
             model2.DatosBancarios.Bancos.AddRange(listBancos);
+
+            model2.DatosBancarios.Nombre = resultUser.Banco?.Nombre != null ? resultUser.Banco.Nombre : null;
             model2.TipoBancarios.Tipocuenta.AddRange(tipoCuenta);
-            model2.UsuarioId = 12345;
+            model2.TipoBancarios.Nombre = resultUser.TipoCuentaBancaria?.Nombre != null ? resultUser.TipoCuentaBancaria.Nombre : null;
+            model2.UsuarioId = resultUser.UsuarioId;
 
             return View(model2);
         }
@@ -88,27 +91,49 @@ namespace Octopus.Controllers
         [HttpPost]
         public IActionResult ActualizarPerfil(PerfilUsuarioViewModel model)
         {
-            Usuario responseUser = _usuarioBusiness.ObtenerPorCodigoReferencia(model.DatosPersonales.CodigoReferente);
-            if (responseUser == null) { 
-
-                TempData["NoExisteCodigo"] =1;
-                return RedirectToAction("Profile");
-
-            }
-
+            Usuario resultUsuario = _usuarioBusiness.ObtenerPorId(model.UsuarioId); 
             if (model.ActualizarDatosPersonales)
             {
+                Usuario responseUser = _usuarioBusiness.ObtenerPorCodigoReferencia(model.DatosPersonales.CodigoReferente);
+                if (responseUser == null) { 
+
+                    TempData["NoExisteCodigo"] =1;
+                    return RedirectToAction("Profile");
+
+                }
                 if (model.DatosPersonales.CodigoReferente ==null)
                 {
                     model.DatosPersonales.ReferenteId = _usuarioBusiness.ObtenerCuentaApoyo().UsuarioId;
-
                 }
-                    
-                var resultSave = _usuarioBusiness.ActualizarUsuarioAsync(model.DatosPersonales);
+                if (resultUsuario.ReferenteId !=null)
+                {
+                    model.DatosPersonales.ReferenteId = (int)resultUsuario.ReferenteId;
+                }
+                 _usuarioBusiness.ActualizarUsuarioAsync(model.DatosPersonales);
+                return RedirectToAction("Profile", new { primerInicio = true });
+            }
+
+            if(model.DatosBancarios.NumeroCuenta == null 
+                && model.DatosBancarios.Banco == null
+                && (model.TipoBancarios.Nombre == null || model.TipoBancarios.Nombre == ""))
+            {
+                _usuarioBusiness.ActualizarUsuarioAsync(model.DatosPersonales);
+                TempData["NoSeleccionoDatosBanco"] = 0;
+                return RedirectToAction("Profile");
             }
 
 
+           resultUsuario.BancoId = model.DatosBancarios.Banco == null ? null: model.DatosBancarios.Banco;
+           resultUsuario.NumeroCuentaBancaria = model.DatosBancarios.NumeroCuenta ==null ? null: model.DatosBancarios.NumeroCuenta;
+           resultUsuario.TipoCuentaBancariaId = model.TipoBancarios.Nombre==""||
+                                               model.TipoBancarios.Nombre == null? null:
+                                                                                   Convert.ToInt16( model.TipoBancarios.Nombre);
+            _usuarioBusiness.ActualizarUsuarioAsync(resultUsuario);
+
             return RedirectToAction("Profile", new { primerInicio = true });
+
         }
+
+       
     }
 }

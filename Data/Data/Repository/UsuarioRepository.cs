@@ -72,8 +72,8 @@ namespace Data.Repository
         {
             try
             {
-                var usuarioExistente = await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.UsuarioId == usuario.UsuarioId);
+                var usuarioExistente = _context.Usuarios
+                .FirstOrDefault(u => u.UsuarioId == usuario.UsuarioId);
 
                 if (usuarioExistente == null)
                 {

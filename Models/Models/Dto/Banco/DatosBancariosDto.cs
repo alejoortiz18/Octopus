@@ -11,6 +11,7 @@ namespace Models.Dto.Banco
     {
         public int Banco { get; set; }
         public string NumeroCuenta { get; set; }
+        public string Nombre { get; set; }
         public List<BancoDto> Bancos { get; set; } = new List<BancoDto>();
        
 
