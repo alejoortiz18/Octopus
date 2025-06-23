@@ -20,7 +20,7 @@
             @if (Model.Referidos.Any())
             {
                 <button class="btn btn-sm btn-outline-danger mt-2"
-                        onclick="mostrarNivel(@Model.Nivel + 1)">
+                        onclick="toggleReferidos(@Model.UsuarioId, this)">
                     VER REFERIDOS
                 </button>
             }

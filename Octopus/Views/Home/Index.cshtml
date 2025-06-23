@@ -22,7 +22,7 @@
                 @if (Model.Referidos.Any())
                 {
                     <button class="btn btn-sm btn-outline-danger mt-2"
-                            onclick="mostrarNivel(@Model.Nivel + 1)">
+                            onclick="toggleReferidos(@Model.UsuarioId, this)">
                         VER REFERIDOS
                     </button>
                 }
@@ -49,6 +49,28 @@ else
 }
 
 
+<script>
+    // Eliminar cualquier elemento con la clase 'ps__rail-x' o 'ps__rail-y' al cargar la página
+    document.addEventListener('DOMContentLoaded', function () {
+        const rails = document.querySelectorAll('.ps__rail-x, .ps__rail-y');
+        rails.forEach(function (el) {
+            el.parentNode.removeChild(el);
+        });
+    });
+
+    function toggleReferidos(usuarioId, btn) {
+        const div = document.getElementById(`referidos-${usuarioId}`);
+        const isHidden = window.getComputedStyle(div).display === 'none';
+
+        // Alternar visibilidad
+        div.style.display = isHidden ? 'flex' : 'none';
+
+        // Cambiar texto del botón
+        if (btn) {
+            btn.innerText = isHidden ? 'OCULTAR REFERIDOS' : 'VER REFERIDOS';
+        }
+    }
+</script>
 
 
 
