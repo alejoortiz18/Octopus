@@ -1,12 +1,55 @@
 ﻿@using Models.Model.Usuario
 @model UsuarioReferidoViewModel
 
-<div class="container py-4">
-    <h4 class="mb-4">Mi Red de Referidos</h4>
-    <div id="redContainer">
-        @Html.Partial("_TarjetaUsuario.cshtml", Model)
+@if(Model != null)
+{
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="card h-100">
+            <div class="card-header p-3 pt-2 position-relative">
+                <div class="icon icon-lg icon-shape bg-gradient-primary text-white text-center border-radius-xl position-absolute top-0 start-0 translate-middle-y ms-3"
+                     style="width: 45px; height: 45px;">
+                    @Model.UsuarioId
+                </div>
+                <div class="text-end pt-2">
+                    <p class="text-sm mb-0 text-capitalize">Nivel: @Model.Nivel</p>
+                    <h6 class="mb-0">@Model.Nombre</h6>
+                </div>
+            </div>
+            <div class="card-footer p-3">
+                <p class="mb-0">
+                    <span class="text-info font-weight-bolder">@Model.Referidos.Count</span> referidos
+                </p>
+                @if (Model.Referidos.Any())
+                {
+                    <button class="btn btn-sm btn-outline-danger mt-2"
+                            onclick="mostrarNivel(@Model.Nivel + 1)">
+                        VER REFERIDOS
+                    </button>
+                }
+            </div>
+        </div>
     </div>
-</div>
+
+
+    @if (Model.Referidos.Any())
+    {
+        <div id="referidos-@Model.UsuarioId"
+             class="row justify-content-center g-4 mt-3 contenedor-referidos"
+             style="display:none;">
+            @foreach (var referido in Model.Referidos)
+            {
+                @Html.Partial("_TarjetaUsuario", referido)
+            }
+        </div>
+    }
+}
+else
+{
+    <div> No hay usuarios</div>
+}
+
+
+
 
 
 

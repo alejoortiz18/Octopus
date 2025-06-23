@@ -7,7 +7,7 @@ using Helpers.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using perfil = Business.AuthBusiness;
 using Bancos =  Business.BancosBusiness;
-
+using red = Business.RedBusiness;
 namespace Business.Dependences
 {
     public static class BusinessAccessDependency
@@ -22,7 +22,7 @@ namespace Business.Dependences
             services.AddScoped<IBancosRepository, BancoRepository>();
             services.AddScoped<IUsuarioBusiness, UsuarioBusiness>();
             services.AddScoped<IBancosBusiness, Bancos.BancosBusiness>();
-            // services.AddScoped<IUsuarioXSesionBusiness, UsuarioXSesionBusiness>();
+            services.AddScoped<IRedBusiness, red.RedBusiness>();
             // services.AddScoped<ITipoEntrenamientoBusiness, TipoEntrenamientoBusiness>();
             // services.AddScoped<IPerfilBusiness, perfil.PerfilBusiness>();
             //

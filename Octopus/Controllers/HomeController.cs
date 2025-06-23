@@ -17,11 +17,13 @@ namespace Octopus.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IUsuarioBusiness _usuarioBusiness;
+        private readonly IRedBusiness _redBusiness;
 
-        public HomeController(ILogger<HomeController> logger, IUsuarioBusiness usuario)
+        public HomeController(ILogger<HomeController> logger, IUsuarioBusiness usuario, IRedBusiness redBusiness)
         {
             _logger = logger;
             _usuarioBusiness = usuario;
+            _redBusiness = redBusiness;
         }
 
         [HttpGet]
@@ -31,15 +33,15 @@ namespace Octopus.Controllers
             {
 
                 string? userEmail = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
-               
+
                 ViewData["sesion"] = "";
             }
-            ValidarEstadoPerfil();
-            var red = ObtenerRedDeReferidos(); // tu método para construir la jerarquía
-            return View(red);
+            var user = ValidarEstadoPerfil();
+            var resultRed = GenerarRed(user);
+            return View(resultRed);
         }
 
-     
+
         public IActionResult Privacy()
         {
             return View();
@@ -66,29 +68,58 @@ namespace Octopus.Controllers
             return RedirectToAction("InicioSesion", "Auth");
         }
 
-        private void ValidarEstadoPerfil()
+        private Usuario ValidarEstadoPerfil()
         {
             string? userEmail = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
-            var resultUser =_usuarioBusiness.ObtenerPorEmail(userEmail);
+            return _usuarioBusiness.ObtenerPorEmail(userEmail);
+
         }
 
-        private UsuarioReferidoViewModel ObtenerRedDeReferidos()
+        private UsuarioReferidoViewModel GenerarRed(Usuario usuarioId)
         {
-            // Ejemplo: datos dummy para ilustración
-            return new UsuarioReferidoViewModel
+
+            List<RedPorReferidosByIdUsuarioDto> listRed = _redBusiness.GetTodaLaRedPorUsuarioIdAsync(usuarioId.UsuarioId);
+            string jsonRed = System.Text.Json.JsonSerializer.Serialize(listRed);
+
+            UsuarioReferidoViewModel redUsuario = new UsuarioReferidoViewModel();
+
+
+
+
+            // Convertimos la lista a un diccionario de UsuarioReferidoViewModel
+            var diccionarioUsuarios = listRed.ToDictionary(
+                x => x.UsuarioId,
+                x => new UsuarioReferidoViewModel
+                {
+                    UsuarioId = x.UsuarioId,
+                    Nombre = x.NombreCompleto,
+                    Nivel = x.Nivel,
+                    Referidos = new List<UsuarioReferidoViewModel>()
+                });
+
+            UsuarioReferidoViewModel? root = null;
+
+            // Construimos la jerarquía
+            foreach (var item in listRed)
             {
-                UsuarioId = 1,
-                Nombre = "Tú",
-                Nivel = 0,
-                Referidos = new List<UsuarioReferidoViewModel>
-            {
-                new() { UsuarioId = 2, Nombre = "Usuario A", Nivel = 1 },
-                new() { UsuarioId = 3, Nombre = "Usuario B", Nivel = 1 },
-                new() { UsuarioId = 4, Nombre = "Usuario C", Nivel = 1 },
-                new() { UsuarioId = 5, Nombre = "Usuario D", Nivel = 1 },
-                new() { UsuarioId = 6, Nombre = "Usuario E", Nivel = 1 },
+                if (item.UsuarioId == item.ReferenteID)
+                {
+                    // Es el nodo raíz (ej. Apoyo)
+                    root = diccionarioUsuarios[item.UsuarioId];
+                }
+                else if (diccionarioUsuarios.ContainsKey(item.ReferenteID))
+                {
+                    // Se lo agregamos a su referente
+                    diccionarioUsuarios[item.ReferenteID].Referidos.Add(diccionarioUsuarios[item.UsuarioId]);
+                }
             }
-            };
+
+            return root!;
+
         }
+
+
+
+
     }
 }

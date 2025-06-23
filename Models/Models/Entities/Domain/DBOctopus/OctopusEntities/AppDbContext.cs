@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Models.Model.Usuario;
+using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 
 namespace Models.Entities.Domain.DBOctopus.OctopusEntities;
 
@@ -579,6 +580,8 @@ public partial class AppDbContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.UsuarioId).HasColumnName("UsuarioID");
         });
+
+        modelBuilder.Entity<RedPorReferidosByIdUsuarioDto>().HasNoKey();
 
         OnModelCreatingPartial(modelBuilder);
     }

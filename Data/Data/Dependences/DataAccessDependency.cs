@@ -1,5 +1,6 @@
 ﻿using Data.Interfaces;
 using Data.Repository;
+using Data.Repository.RedReferidos;
 using Microsoft.Extensions.DependencyInjection;
 using Models.Entities.Domain.DBOctopus.OctopusEntities;
 
@@ -16,7 +17,7 @@ namespace Data.Dependences
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IBancosRepository, BancoRepository>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-            //services.AddScoped<ISeriesRepository, SeriesRepository>();
+            services.AddScoped<IRedRepository, RedRepository>();
             //services.AddScoped<INadadorXEntrenadorRepository, NadadorXEntrenadorRepository>();
             //services.AddScoped<IUsuarioXSesionRepository, UsuarioXSesionRepository>();
             //services.AddScoped<ITipoEntrenamientoRepository, TipoEntrenamientoRepository>();
