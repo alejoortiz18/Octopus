@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Entities.Domain.DBOctopus.OctopusEntities;
+using Models.Model.Usuario;
 using Octopus.Models;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -34,7 +35,8 @@ namespace Octopus.Controllers
                 ViewData["sesion"] = "";
             }
             ValidarEstadoPerfil();
-            return View();
+            var red = ObtenerRedDeReferidos(); // tu método para construir la jerarquía
+            return View(red);
         }
 
      
@@ -68,6 +70,25 @@ namespace Octopus.Controllers
         {
             string? userEmail = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
             var resultUser =_usuarioBusiness.ObtenerPorEmail(userEmail);
+        }
+
+        private UsuarioReferidoViewModel ObtenerRedDeReferidos()
+        {
+            // Ejemplo: datos dummy para ilustración
+            return new UsuarioReferidoViewModel
+            {
+                UsuarioId = 1,
+                Nombre = "Tú",
+                Nivel = 0,
+                Referidos = new List<UsuarioReferidoViewModel>
+            {
+                new() { UsuarioId = 2, Nombre = "Usuario A", Nivel = 1 },
+                new() { UsuarioId = 3, Nombre = "Usuario B", Nivel = 1 },
+                new() { UsuarioId = 4, Nombre = "Usuario C", Nivel = 1 },
+                new() { UsuarioId = 5, Nombre = "Usuario D", Nivel = 1 },
+                new() { UsuarioId = 6, Nombre = "Usuario E", Nivel = 1 },
+            }
+            };
         }
     }
 }

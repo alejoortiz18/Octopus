@@ -1,4 +1,28 @@
-﻿@{
+﻿@using Models.Model.Usuario
+@model UsuarioReferidoViewModel
+
+<div class="container py-4">
+    <h4 class="mb-4">Mi Red de Referidos</h4>
+    <div id="redContainer">
+        @Html.Partial("_TarjetaUsuario.cshtml", Model)
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* @{
     ViewData["Title"] = "Home Page";
 }
 <div>
@@ -11,103 +35,28 @@
     </nav>
 </div>
 
+
+
 <div class="container-fluid py-4">
-    <div class="row">
 
-
-        <div class="container-fluid">
-            <div class="row g-3 justify-content-center">
-
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="card h-100">
-                        <div class="card-header p-3 pt-2 position-relative">
-                            <div class="icon icon-lg icon-shape bg-gradient-primary text-white text-center border-radius-xl position-absolute top-0 start-0 translate-middle-y ms-3" style="width: 45px; height: 45px;">
-                                1
-                            </div>
-                            <div class="text-end pt-2">
-                                <p class="text-sm mb-0 text-capitalize">Ingresos Hoy</p>
-                                <h4 class="mb-0">$53k</h4>
-                            </div>
-                        </div>
-                        <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-success font-weight-bolder">+55%</span> vs semana pasada</p>
-                        </div>
+    <div class="row justify-content-center g-4">
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="card h-100">
+                <div class="card-header p-3 pt-2 position-relative">
+                    <div class="icon icon-lg icon-shape bg-gradient-primary text-white text-center border-radius-xl position-absolute top-0 start-0 translate-middle-y ms-3" 
+                         style="width: 45px; height: 45px;">
+                        1
+                    </div>
+                    <div class="text-end pt-2">
+                        <p class="text-sm mb-0 text-capitalize"></p>
+                        <h4 class="mb-0">$53k</h4>
                     </div>
                 </div>
-
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="card h-100">
-                        <div class="card-header p-3 pt-2 position-relative">
-                            <div class="icon icon-lg icon-shape bg-gradient-success text-white text-center border-radius-xl position-absolute top-0 start-0 translate-middle-y ms-3" style="width: 45px; height: 45px;">
-                                2
-                            </div>
-                            <div class="text-end pt-2">
-                                <p class="text-sm mb-0 text-capitalize">Ventas</p>
-                                <h4 class="mb-0">1,200</h4>
-                            </div>
-                        </div>
-                        <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-danger font-weight-bolder">-4%</span> que ayer</p>
-                        </div>
-                    </div>
+                <div class="card-footer p-3">
+                    <p class="mb-0"><span class="text-success font-weight-bolder">+55%</span> vs semana pasada</p>
                 </div>
-
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="card h-100">
-                        <div class="card-header p-3 pt-2 position-relative">
-                            <div class="icon icon-lg icon-shape bg-gradient-warning text-white text-center border-radius-xl position-absolute top-0 start-0 translate-middle-y ms-3" style="width: 45px; height: 45px;">
-                                3
-                            </div>
-                            <div class="text-end pt-2">
-                                <p class="text-sm mb-0 text-capitalize">Clientes Nuevos</p>
-                                <h4 class="mb-0">34</h4>
-                            </div>
-                        </div>
-                        <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-success font-weight-bolder">+8%</span> este mes</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="card h-100">
-                        <div class="card-header p-3 pt-2 position-relative">
-                            <div class="icon icon-lg icon-shape bg-gradient-info text-white text-center border-radius-xl position-absolute top-0 start-0 translate-middle-y ms-3" style="width: 45px; height: 45px;">
-                                4
-                            </div>
-                            <div class="text-end pt-2">
-                                <p class="text-sm mb-0 text-capitalize">Pagos</p>
-                                <h4 class="mb-0">$12k</h4>
-                            </div>
-                        </div>
-                        <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-warning font-weight-bolder">0%</span> cambio</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="card h-100">
-                        <div class="card-header p-3 pt-2 position-relative">
-                            <div class="icon icon-lg icon-shape bg-gradient-danger text-white text-center border-radius-xl position-absolute top-0 start-0 translate-middle-y ms-3" style="width: 45px; height: 45px;">
-                                6
-                            </div>
-                            <div class="text-end pt-2">
-                                <p class="text-sm mb-0 text-capitalize">Alertas</p>
-                                <h4 class="mb-0">3</h4>
-                            </div>
-                        </div>
-                        <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-danger font-weight-bolder">+2</span> esta semana</p>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
-
-       
     </div>
-
-
-</div>
+    
+</div> *@
