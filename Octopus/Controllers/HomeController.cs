@@ -27,7 +27,7 @@ namespace Octopus.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(Guid? idSesion)
+        public IActionResult Index(Guid? idSesion, bool? isAuthController = false)
         {
             if (idSesion.HasValue)
             {
@@ -37,11 +37,11 @@ namespace Octopus.Controllers
                 ViewData["sesion"] = "";
             }
             var user = ValidarEstadoPerfil();
-            var resultRed = GenerarRed(user);
-            return View(resultRed);
+            GetReferidosPartial(user.UsuarioId, (bool)isAuthController);
+            return View();
         }
 
-        public IActionResult GetReferidosPartial(int usuarioId)
+        public IActionResult GetReferidosPartial(int usuarioId, bool isAuthController = false)
         {
             string? userEmail = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
             var usuarioActual = _usuarioBusiness.ObtenerPorEmail(userEmail);
@@ -50,15 +50,30 @@ namespace Octopus.Controllers
             // Encuentra el nodo clicado:
             var nodo = BuscarNodo(raiz, usuarioId);
             if (nodo == null)
-                return NoContent();
+            {
+                UsuarioReferidoViewModel model = new UsuarioReferidoViewModel();
+                model.Nombre = usuarioActual.NombreCompleto;
+                model.UsuarioId = usuarioActual.UsuarioId;
+                model.Nivel = 0;
+                model.Referidos = new List<UsuarioReferidoViewModel>();
+                return View(model);
+            }
+            if (isAuthController)
+            {
+                return View(nodo);
+            }
+            return PartialView("_ReferidosList", nodo.Referidos);
 
             // En lugar de pasar nodo.Referidos a _TarjetaUsuario,
             // devolvemos la lista a _ReferidosList:
-            return PartialView("_ReferidosList", nodo.Referidos);
         }
 
         private UsuarioReferidoViewModel BuscarNodo(UsuarioReferidoViewModel root, int id)
         {
+            if (root == null)
+            {
+                return null;
+            }
             if (root.UsuarioId == id) return root;
             foreach (var hijo in root.Referidos)
             {

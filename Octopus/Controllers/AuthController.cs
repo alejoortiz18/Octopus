@@ -113,8 +113,9 @@ namespace Octopus.Controllers
                     {
                         return RedirectToAction("Profile", "Usuario", new { primerInicio = true });
                     }
+                    
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home", new { primerInicio = true, isAuthController = true });
                 }
 
                 ViewBag.Mensaje = "Credenciales incorrectas";

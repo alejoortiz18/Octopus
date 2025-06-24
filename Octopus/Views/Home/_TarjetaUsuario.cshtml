@@ -17,13 +17,16 @@
             <p class="mb-0">
                 <span class="text-info font-weight-bolder">@Model.Referidos.Count</span> referidos
             </p>
-            @* Solo el botón, sin ningún div estático de referidos debajo *@
-            @if (Model.Referidos.Any())
+            
+            @if (Model !=null )
             {
-                <button class="btn btn-sm btn-outline-danger mt-2"
-                        onclick="toggleReferidosDinamico(@Model.UsuarioId, this)">
-                    VER REFERIDOS
-                </button>
+                @if (Model.Referidos.Count()>0)
+                {
+                    <button class="btn btn-sm btn-outline-danger mt-2"
+                            onclick="toggleReferidosDinamico(@Model.UsuarioId, this)">
+                        VER REFERIDOS
+                    </button>
+                }
             }
         </div>
     </div>
