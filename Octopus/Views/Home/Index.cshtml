@@ -1,127 +1,68 @@
 ﻿@using Models.Model.Usuario
 @model UsuarioReferidoViewModel
 
-@if(Model != null)
-{
-    <div class="col-6 col-md-4 col-lg-2">
-        <div class="card h-100">
-            <div class="card-header p-3 pt-2 position-relative">
-                <div class="icon icon-lg icon-shape bg-gradient-primary text-white text-center border-radius-xl position-absolute top-0 start-0 translate-middle-y ms-3"
-                     style="width: 45px; height: 45px;">
-                    @Model.UsuarioId
-                </div>
-                <div class="text-end pt-2">
-                    <p class="text-sm mb-0 text-capitalize">Nivel: @Model.Nivel</p>
-                    <h6 class="mb-0">@Model.Nombre</h6>
-                </div>
-            </div>
-            <div class="card-footer p-3">
-                <p class="mb-0">
-                    <span class="text-info font-weight-bolder">@Model.Referidos.Count</span> referidos
-                </p>
-                @if (Model.Referidos.Any())
-                {
-                    <button class="btn btn-sm btn-outline-danger mt-2"
-                            onclick="toggleReferidos(@Model.UsuarioId, this)">
-                        VER REFERIDOS
-                    </button>
-                }
-            </div>
+<div class="container py-4">
+
+    <!-- Nivel 0: tu usuario raíz -->
+    <div class="nivel nivel-0">
+        <div class="row justify-content-start g-4">
+            @Html.Partial("_TarjetaUsuario", Model)
         </div>
     </div>
 
+    <!-- Contenedor vacío donde se insertarán filas de referidos -->
+    <div id="referidos-dinamicos"></div>
 
-    @if (Model.Referidos.Any())
-    {
-        <div id="referidos-@Model.UsuarioId"
-             class="row justify-content-center g-4 mt-3 contenedor-referidos"
-             style="display:none;">
-            @foreach (var referido in Model.Referidos)
-            {
-                @Html.Partial("_TarjetaUsuario", referido)
-            }
-        </div>
-    }
-}
-else
-{
-    <div> No hay usuarios</div>
-}
-
-
-<script>
-    // Eliminar cualquier elemento con la clase 'ps__rail-x' o 'ps__rail-y' al cargar la página
-    document.addEventListener('DOMContentLoaded', function () {
-        const rails = document.querySelectorAll('.ps__rail-x, .ps__rail-y');
-        rails.forEach(function (el) {
-            el.parentNode.removeChild(el);
-        });
-    });
-
-    function toggleReferidos(usuarioId, btn) {
-        const div = document.getElementById(`referidos-${usuarioId}`);
-        const isHidden = window.getComputedStyle(div).display === 'none';
-
-        // Alternar visibilidad
-        div.style.display = isHidden ? 'flex' : 'none';
-
-        // Cambiar texto del botón
-        if (btn) {
-            btn.innerText = isHidden ? 'OCULTAR REFERIDOS' : 'VER REFERIDOS';
-        }
-    }
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@* @{
-    ViewData["Title"] = "Home Page";
-}
-<div>
-    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true" style="place-self: center;">
-        <div class="container-fluid py-1 px-3">
-            <nav aria-label="breadcrumb">
-                <h6 class="font-weight-bolder mb-0 text-center fw-bold" style="font-size: 2rem;">Mi RED</h6>
-            </nav>
-        </div>
-    </nav>
 </div>
 
+@section Scripts {
+    <script>
+        async function toggleReferidosDinamico(usuarioId, btn) {
+          const root = document.getElementById("referidos-dinamicos");
+          let bloque = document.getElementById(`referidos-generados-${usuarioId}`);
+
+          // Si ya existe: lo quitamos
+          if (bloque) {
+            bloque.remove();
+            btn.innerText = "VER REFERIDOS";
+            return;
+          }
+
+          // Si no existe: creamos la fila y la insertamos
+          bloque = document.createElement("div");
+          bloque.id = `referidos-generados-${usuarioId}`;
+          bloque.className = "row justify-content-start g-4 mt-3";
+
+          const resp = await fetch(`/Home/GetReferidosPartial?usuarioId=${usuarioId}`);
+          if (!resp.ok) return;
+          bloque.innerHTML = await resp.text();
+
+          root.appendChild(bloque);
+          btn.innerText = "OCULTAR REFERIDOS";
+        }
+    </script>
+}
 
 
-<div class="container-fluid py-4">
 
-    <div class="row justify-content-center g-4">
-        <div class="col-6 col-md-4 col-lg-2">
-            <div class="card h-100">
-                <div class="card-header p-3 pt-2 position-relative">
-                    <div class="icon icon-lg icon-shape bg-gradient-primary text-white text-center border-radius-xl position-absolute top-0 start-0 translate-middle-y ms-3" 
-                         style="width: 45px; height: 45px;">
-                        1
-                    </div>
-                    <div class="text-end pt-2">
-                        <p class="text-sm mb-0 text-capitalize"></p>
-                        <h4 class="mb-0">$53k</h4>
-                    </div>
-                </div>
-                <div class="card-footer p-3">
-                    <p class="mb-0"><span class="text-success font-weight-bolder">+55%</span> vs semana pasada</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-</div> *@
+
+<style>
+.ps__rail-x {
+    display: none !important;
+}
+
+body, html {
+    overflow-x: hidden;
+}
+
+.contenedor-referidos {
+    overflow-x: hidden;
+}
+</style>
+
+
+
+
+
+
+

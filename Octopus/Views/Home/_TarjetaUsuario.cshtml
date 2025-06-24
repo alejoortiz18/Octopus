@@ -17,28 +17,17 @@
             <p class="mb-0">
                 <span class="text-info font-weight-bolder">@Model.Referidos.Count</span> referidos
             </p>
+            @* Solo el botón, sin ningún div estático de referidos debajo *@
             @if (Model.Referidos.Any())
             {
                 <button class="btn btn-sm btn-outline-danger mt-2"
-                        onclick="toggleReferidos(@Model.UsuarioId, this)">
+                        onclick="toggleReferidosDinamico(@Model.UsuarioId, this)">
                     VER REFERIDOS
                 </button>
             }
         </div>
     </div>
 </div>
-
-@if (Model.Referidos.Any())
-{
-    <div id="referidos-@Model.UsuarioId"
-         class="row justify-content-center g-4 mt-3 contenedor-referidos"
-         style="display:none;">
-        @foreach (var referido in Model.Referidos)
-        {
-            @Html.Partial("_TarjetaUsuario", referido)
-        }
-    </div>
-}
 
 
 

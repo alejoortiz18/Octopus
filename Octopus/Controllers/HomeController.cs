@@ -41,6 +41,34 @@ namespace Octopus.Controllers
             return View(resultRed);
         }
 
+        public IActionResult GetReferidosPartial(int usuarioId)
+        {
+            string? userEmail = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+            var usuarioActual = _usuarioBusiness.ObtenerPorEmail(userEmail);
+            // Generas tu vista modelo jerárquico completo
+            var raiz = GenerarRed(usuarioActual);
+            // Encuentra el nodo clicado:
+            var nodo = BuscarNodo(raiz, usuarioId);
+            if (nodo == null)
+                return NoContent();
+
+            // En lugar de pasar nodo.Referidos a _TarjetaUsuario,
+            // devolvemos la lista a _ReferidosList:
+            return PartialView("_ReferidosList", nodo.Referidos);
+        }
+
+        private UsuarioReferidoViewModel BuscarNodo(UsuarioReferidoViewModel root, int id)
+        {
+            if (root.UsuarioId == id) return root;
+            foreach (var hijo in root.Referidos)
+            {
+                var encontrado = BuscarNodo(hijo, id);
+                if (encontrado != null) return encontrado;
+            }
+            return null;
+        }
+
+
 
         public IActionResult Privacy()
         {
