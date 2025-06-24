@@ -11,6 +11,7 @@ namespace Models.Model.Usuario
         public int UsuarioId { get; set; }
         public string Nombre { get; set; }
         public int Nivel { get; set; }
+        public string CodigoReferencia { get; set; }
         public List<UsuarioReferidoViewModel> Referidos { get; set; } = new();
     }
 }

@@ -54,6 +54,7 @@ namespace Octopus.Controllers
                 UsuarioReferidoViewModel model = new UsuarioReferidoViewModel();
                 model.Nombre = usuarioActual.NombreCompleto;
                 model.UsuarioId = usuarioActual.UsuarioId;
+                model.CodigoReferencia = usuarioActual.CodigoReferencia;
                 model.Nivel = 0;
                 model.Referidos = new List<UsuarioReferidoViewModel>();
                 return View(model);
@@ -122,13 +123,8 @@ namespace Octopus.Controllers
         {
 
             List<RedPorReferidosByIdUsuarioDto> listRed = _redBusiness.GetTodaLaRedPorUsuarioIdAsync(usuarioId.UsuarioId);
-            string jsonRed = System.Text.Json.JsonSerializer.Serialize(listRed);
-
-            UsuarioReferidoViewModel redUsuario = new UsuarioReferidoViewModel();
-
-
-
-
+          
+         
             // Convertimos la lista a un diccionario de UsuarioReferidoViewModel
             var diccionarioUsuarios = listRed.ToDictionary(
                 x => x.UsuarioId,
@@ -137,6 +133,7 @@ namespace Octopus.Controllers
                     UsuarioId = x.UsuarioId,
                     Nombre = x.NombreCompleto,
                     Nivel = x.Nivel,
+                    CodigoReferencia = x.CodigoReferencia,
                     Referidos = new List<UsuarioReferidoViewModel>()
                 });
 
