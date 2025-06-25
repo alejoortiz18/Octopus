@@ -1,61 +1,87 @@
 ﻿@using Models.Model.Usuario
 @model UsuarioReferidoViewModel
 
-
 <div>
-    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true" style="place-self: center;">
-        <div class="container-fluid py-1 px-3">
-            <nav aria-label="breadcrumb">
-                <h6 class="font-weight-bolder mb-0 text-center fw-bold" style="font-size: 2rem;">MI RED ACTUAL</h6>
-            </nav>
-        </div>
-    </nav>
+    <nav …>…</nav>
 </div>
 
-
 <div class="container py-4">
-
-    <!-- Nivel 0: tu usuario raíz -->
-    <div class="nivel nivel-0">
+    <!-- NIVEL 0 -->
+    <div id="nivel-0" class="mb-4">
         <div class="row justify-content-start g-4">
             @Html.Partial("_TarjetaUsuario", Model)
         </div>
     </div>
 
-    <!-- Contenedor vacío donde se insertarán filas de referidos -->
-    <div id="referidos-dinamicos"></div>
+    <!-- NIVEL 1 -->
+    <div id="nivel-1" class="mb-4">
+        <div class="row justify-content-start g-4"></div>
+    </div>
 
+    <!-- NIVEL 2 -->
+    <div id="nivel-2" class="mb-4">
+        <div class="row justify-content-start g-4"></div>
+    </div>
+
+    <!-- NIVEL 3 -->
+    <div id="nivel-3" class="mb-4">
+        <div class="row justify-content-start g-4"></div>
+    </div>
+
+    <!-- NIVEL 4 -->
+    <div id="nivel-4" class="mb-4">
+        <div class="row justify-content-start g-4"></div>
+    </div>
 </div>
 
 @section Scripts {
     <script>
-        async function toggleReferidosDinamico(usuarioId, btn) {
-          const root = document.getElementById("referidos-dinamicos");
-          let bloque = document.getElementById(`referidos-generados-${usuarioId}`);
+        async function toggleReferidosDinamico(usuarioId, nivel, btn) {
+          const maxLevel = 4;
+          const currRow = document.querySelector(`#nivel-${nivel} .row`);
+          const nextRow = document.querySelector(`#nivel-${nivel+1} .row`);
+          const isHide = btn.innerText === 'OCULTAR REFERIDOS';
 
-          // Si ya existe: lo quitamos
-          if (bloque) {
-            bloque.remove();
-            btn.innerText = "VER REFERIDOS";
+          if (isHide) {
+            // ── 1) Cerrar: borrar el nivel siguiente y restaurar hermanos
+            nextRow.innerHTML = '';
+            currRow
+              .querySelectorAll('.col-6, .col-md-4, .col-lg-2')
+              .forEach(col => {
+                col.style.display = '';
+                const b = col.querySelector('button.btn-outline-danger');
+                if (b) b.innerText = 'VER REFERIDOS';
+              });
             return;
           }
 
-          // Si no existe: creamos la fila y la insertamos
-          bloque = document.createElement("div");
-          bloque.id = `referidos-generados-${usuarioId}`;
-          bloque.className = "row justify-content-start g-4 mt-3";
+          // ── 2) Abrir: limpiar desde nextLevel hasta maxLevel
+          for (let lv = nivel + 1; lv <= maxLevel; lv++) {
+            document.querySelector(`#nivel-${lv} .row`).innerHTML = '';
+          }
+          // ── 3) Ocultar hermanos en este nivel
+          currRow
+            .querySelectorAll('.col-6, .col-md-4, .col-lg-2')
+            .forEach(col => {
+              if (!col.contains(btn)) col.style.display = 'none';
+            });
 
+          // ── 4) Traer partial de los hijos
           const resp = await fetch(`/Home/GetReferidosPartial?usuarioId=${usuarioId}`);
-          if (!resp.ok) return;
-          bloque.innerHTML = await resp.text();
+          if (!resp.ok) {
+            console.error('Error cargando referidos de usuario', usuarioId);
+            return;
+          }
+          const html = await resp.text();
 
-          root.appendChild(bloque);
-          btn.innerText = "OCULTAR REFERIDOS";
+          // ── 5) Pintar hijos en el nivel+1
+          nextRow.innerHTML = html;
+
+          // ── 6) Actualizar texto del botón
+          btn.innerText = 'OCULTAR REFERIDOS';
         }
     </script>
 }
-
-
 
 
 <style>
