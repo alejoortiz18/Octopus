@@ -39,12 +39,16 @@
         async function toggleReferidosDinamico(usuarioId, nivel, btn) {
           const maxLevel = 4;
           const currRow = document.querySelector(`#nivel-${nivel} .row`);
-          const nextRow = document.querySelector(`#nivel-${nivel+1} .row`);
-          const isHide = btn.innerText === 'OCULTAR REFERIDOS';
+          const nextLevel = nivel + 1;
+          const isHiding = btn.innerText === 'OCULTAR REFERIDOS';
 
-          if (isHide) {
-            // ── 1) Cerrar: borrar el nivel siguiente y restaurar hermanos
-            nextRow.innerHTML = '';
+          if (isHiding) {
+            // 1) Limpiar TODOS los niveles >= nextLevel
+            for (let lv = nextLevel; lv <= maxLevel; lv++) {
+              document.querySelector(`#nivel-${lv} .row`).innerHTML = '';
+            }
+
+            // 2) Restaurar visibilidad de TODOS los hermanos en EL nivel actual
             currRow
               .querySelectorAll('.col-6, .col-md-4, .col-lg-2')
               .forEach(col => {
@@ -52,36 +56,40 @@
                 const b = col.querySelector('button.btn-outline-danger');
                 if (b) b.innerText = 'VER REFERIDOS';
               });
+
             return;
           }
 
-          // ── 2) Abrir: limpiar desde nextLevel hasta maxLevel
-          for (let lv = nivel + 1; lv <= maxLevel; lv++) {
+          // ───────────────────────────────────────────────────────
+          // Si no es ocultar, es “abrir” (igual que antes)
+
+          // 3) Limpiar TODOS los niveles >= nextLevel
+          for (let lv = nextLevel; lv <= maxLevel; lv++) {
             document.querySelector(`#nivel-${lv} .row`).innerHTML = '';
           }
-          // ── 3) Ocultar hermanos en este nivel
+
+          // 4) Ocultar hermanos en nivel actual
           currRow
             .querySelectorAll('.col-6, .col-md-4, .col-lg-2')
             .forEach(col => {
               if (!col.contains(btn)) col.style.display = 'none';
             });
 
-          // ── 4) Traer partial de los hijos
+          // 5) Traer y pintar hijos en el siguiente nivel
           const resp = await fetch(`/Home/GetReferidosPartial?usuarioId=${usuarioId}`);
           if (!resp.ok) {
             console.error('Error cargando referidos de usuario', usuarioId);
             return;
           }
           const html = await resp.text();
+          document.querySelector(`#nivel-${nextLevel} .row`).innerHTML = html;
 
-          // ── 5) Pintar hijos en el nivel+1
-          nextRow.innerHTML = html;
-
-          // ── 6) Actualizar texto del botón
+          // 6) Marcar el botón como “OCULTAR”
           btn.innerText = 'OCULTAR REFERIDOS';
         }
     </script>
 }
+
 
 
 <style>
