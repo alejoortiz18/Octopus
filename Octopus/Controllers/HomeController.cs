@@ -29,6 +29,7 @@ namespace Octopus.Controllers
         [HttpGet]
         public IActionResult Index(Guid? idSesion, bool? isAuthController = false)
         {
+            isAuthController = true;
             if (idSesion.HasValue)
             {
 
@@ -48,7 +49,7 @@ namespace Octopus.Controllers
             // Generas tu vista modelo jerárquico completo
             var raiz = GenerarRed(usuarioActual);
             // Encuentra el nodo clicado:
-            var nodo = BuscarNodo(raiz, usuarioId);
+            UsuarioReferidoViewModel nodo = BuscarNodo(raiz, usuarioId);
             if (nodo == null)
             {
                 UsuarioReferidoViewModel model = new UsuarioReferidoViewModel();

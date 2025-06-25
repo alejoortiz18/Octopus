@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<Models.Model.Usuario.UsuarioReferidoViewModel>
+
 @foreach (var u in Model)
 {
     @Html.Partial("_TarjetaUsuario", u)
 }
-
-
