@@ -19,8 +19,7 @@ namespace Data.Repository.RedReferidos
         {
             _context = context;
         }
-
-       
+              
 
         public List<RedPorReferidosByIdUsuarioDto> GetTodaLaRedPorUsuarioIdAsync(int usuarioId)
         {
@@ -31,6 +30,14 @@ namespace Data.Repository.RedReferidos
            .ToList();
 
             return result;
+        }
+
+        public RedReferido Insert(RedReferido red) 
+        {            
+           
+            _context.RedReferidos.Add(red);
+            _context.SaveChanges();
+            return red;
         }
 
     }

@@ -19,14 +19,19 @@ namespace Octopus.Controllers
         private readonly IBancosBusiness _bancosBusiness;
         private readonly IMapper _mapper;
         private readonly ICodigoHelper _codigoHelper;
+        private readonly IRedBusiness _redReferidoBusiness;
 
-
-        public UsuarioController(IUsuarioBusiness usuarioBusiness, IBancosBusiness bancosBusiness, IMapper mapper,ICodigoHelper codHelper)
+        public UsuarioController(IUsuarioBusiness usuarioBusiness
+            ,IBancosBusiness bancosBusiness
+            ,IMapper mapper
+            ,ICodigoHelper codHelper
+            ,IRedBusiness red)
         {
             _usuarioBusiness = usuarioBusiness;
             _bancosBusiness = bancosBusiness;
             _mapper = mapper;
             _codigoHelper = codHelper;
+            _redReferidoBusiness = red;
         }
 
         public IActionResult Profile(bool? primerInicio =false)
@@ -97,25 +102,51 @@ namespace Octopus.Controllers
         [HttpPost]
         public IActionResult ActualizarPerfil(PerfilUsuarioViewModel model)
         {
-            Usuario resultUsuario = _usuarioBusiness.ObtenerPorId(model.UsuarioId); 
+            Usuario resultUsuario = _usuarioBusiness.ObtenerPorId(model.UsuarioId);
+            bool registrado = false;
             if (model.ActualizarDatosPersonales)
             {
-                Usuario responseUser = _usuarioBusiness.ObtenerPorCodigoReferencia(model.DatosPersonales.CodigoReferente);
-                if (responseUser == null) { 
-
-                    TempData["NoExisteCodigo"] =1;
-                    return RedirectToAction("Profile");
-
-                }
+                bool ingresoCodigo = true;
                 if (model.DatosPersonales.CodigoReferente ==null)
                 {
-                    model.DatosPersonales.ReferenteId = _usuarioBusiness.ObtenerCuentaApoyo().UsuarioId;
+                    ingresoCodigo = false;
                 }
-                if (resultUsuario.ReferenteId !=null)
+
+                Usuario responseUser = new Usuario();
+                if (ingresoCodigo == false)
                 {
-                    model.DatosPersonales.ReferenteId = (int)resultUsuario.ReferenteId;
+                    model.DatosPersonales.ReferenteId = _usuarioBusiness.ObtenerCuentaApoyo().UsuarioId;
+                    registrado = _usuarioBusiness.ActualizarUsuarioAsync(model.DatosPersonales).Result; 
                 }
-                 _usuarioBusiness.ActualizarUsuarioAsync(model.DatosPersonales);
+                else
+                {
+                    responseUser = _usuarioBusiness.ObtenerPorCodigoReferencia(model.DatosPersonales.CodigoReferente);
+
+                    if (responseUser == null) { 
+
+                        TempData["NoExisteCodigo"] =1;
+                        return RedirectToAction("Profile");
+                    }
+                    model.DatosPersonales.ReferenteId = responseUser.UsuarioId;
+                    registrado = _usuarioBusiness.ActualizarUsuarioAsync(model.DatosPersonales).Result; 
+                }
+                if (registrado)
+                {
+                    RedReferido red = new RedReferido
+                    {
+                        UsuarioId = model.UsuarioId,
+                        ReferenteId = model.DatosPersonales.ReferenteId,
+                        Nivel = 0,
+                        FechaVinculacion = DateTime.Now
+                    };
+                    _redReferidoBusiness.Insert(red);
+                    TempData["ActualizarUsuario"] = "El usuario se ha actualizado Correctamente";
+                }
+                else
+                {
+                    TempData["ActualizarUsuario"] = "No se pudo actualizar el usuario";
+                    return RedirectToAction("Profile");
+                }
                 return RedirectToAction("Profile", new { primerInicio = true });
             }
 
@@ -145,6 +176,7 @@ namespace Octopus.Controllers
             return RedirectToAction("Profile", new { primerInicio = true });
 
         }
+
 
        
     }

@@ -6,5 +6,6 @@ namespace Business.Interfaces
     public interface IRedBusiness
     {
         public List<RedPorReferidosByIdUsuarioDto> GetTodaLaRedPorUsuarioIdAsync(int usuarioId);
+        public RedReferido Insert(RedReferido red);
     }
 }

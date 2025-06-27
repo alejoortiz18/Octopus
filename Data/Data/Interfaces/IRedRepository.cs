@@ -6,6 +6,6 @@ namespace Data.Interfaces
     public interface IRedRepository
     {
         public List<RedPorReferidosByIdUsuarioDto> GetTodaLaRedPorUsuarioIdAsync(int usuarioId);
-
+        public RedReferido Insert(RedReferido red);
     }
 }

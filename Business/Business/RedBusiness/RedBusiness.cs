@@ -18,5 +18,9 @@ namespace Business.RedBusiness
             return _redRepository.GetTodaLaRedPorUsuarioIdAsync(usuarioId);
         }
 
+        public RedReferido Insert(RedReferido red)
+        {
+            return _redRepository.Insert(red);
+        }
     }
 }
