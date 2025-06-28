@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Entities.Domain.DBOctopus.OctopusEntities;
 using Models.Model.Usuario;
+using Newtonsoft.Json;
 using Octopus.Models;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -70,33 +71,89 @@ namespace Octopus.Controllers
             // devolvemos la lista a _ReferidosList:
         }
 
+        [HttpPost]
+        public IActionResult BuscarNodo(string rootJson, int usuarioId)
+        {
+            var root = JsonConvert.DeserializeObject<UsuarioReferidoViewModel>(rootJson);
+            var nodo = BuscarNodo(root, usuarioId);
+            return PartialView("_ReferidosList", nodo.Referidos);
+
+        }
+
+        // Método privado que recorre el árbol
         private UsuarioReferidoViewModel BuscarNodo(UsuarioReferidoViewModel root, int id)
         {
-            if (root == null)
-            {
-                return null;
-            }
-            if (root.UsuarioId == id) return root;
+            if (root.UsuarioId == id)
+                return root;
+
             foreach (var hijo in root.Referidos)
             {
                 var encontrado = BuscarNodo(hijo, id);
-                if (encontrado != null) return encontrado;
+                if (encontrado != null)
+                    return encontrado;
             }
+
             return null;
         }
 
+      
 
-
-        public IActionResult Privacy()
+        private UsuarioReferidoViewModel GenerarRed(Usuario usuarioRoot)
         {
-            return View();
+            // 1) Trae todos los DTOs de referidos
+            List<RedPorReferidosByIdUsuarioDto> listRed =
+                _redBusiness.GetTodaLaRedPorUsuarioIdAsync(usuarioRoot.UsuarioId);
+
+            // 2) Crea el nodo raíz (el usuario que inició la consulta)
+            var root = new UsuarioReferidoViewModel
+            {
+                UsuarioId = usuarioRoot.UsuarioId,
+                Nombre = usuarioRoot.NombreCompleto,
+                Nivel = 0,
+                CodigoReferencia = usuarioRoot.CodigoReferencia,
+                Referidos = new List<UsuarioReferidoViewModel>()
+            };
+
+            // 3) Crea diccionario de “Id de usuario” → “VM del referido”
+            var diccionario = listRed
+                .ToDictionary(
+                   x => x.UsuarioId,
+                   x => new UsuarioReferidoViewModel
+                   {
+                       UsuarioId = x.UsuarioId,
+                       Nombre = x.NombreCompleto,
+                       Nivel = x.Nivel,
+                       CodigoReferencia = x.CodigoReferencia,
+                       Referidos = new List<UsuarioReferidoViewModel>()
+                   });
+
+            // 4) Agrega **directos** al root
+            foreach (var dto in listRed.Where(x => x.ReferenteID == usuarioRoot.UsuarioId))
+            {
+                root.Referidos.Add(diccionario[dto.UsuarioId]);
+            }
+
+            // 5) Construye el resto del árbol (nietos, biznietos...)
+            foreach (var dto in listRed.Where(x => x.ReferenteID != usuarioRoot.UsuarioId))
+            {
+                if (diccionario.ContainsKey(dto.ReferenteID))
+                {
+                    diccionario[dto.ReferenteID]
+                        .Referidos
+                        .Add(diccionario[dto.UsuarioId]);
+                }
+            }
+
+            return root;
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        private Usuario ValidarEstadoPerfil()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            string? userEmail = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+            return _usuarioBusiness.ObtenerPorEmail(userEmail);
+
         }
+
 
         public async Task<IActionResult> Salir()
         {
@@ -113,53 +170,16 @@ namespace Octopus.Controllers
             return RedirectToAction("InicioSesion", "Auth");
         }
 
-        private Usuario ValidarEstadoPerfil()
+        public IActionResult Privacy()
         {
-            string? userEmail = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
-            return _usuarioBusiness.ObtenerPorEmail(userEmail);
-
+            return View();
         }
 
-        private UsuarioReferidoViewModel GenerarRed(Usuario usuarioId)
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
         {
-
-            List<RedPorReferidosByIdUsuarioDto> listRed = _redBusiness.GetTodaLaRedPorUsuarioIdAsync(usuarioId.UsuarioId);
-          
-         
-            // Convertimos la lista a un diccionario de UsuarioReferidoViewModel
-            var diccionarioUsuarios = listRed.ToDictionary(
-                x => x.UsuarioId,
-                x => new UsuarioReferidoViewModel
-                {
-                    UsuarioId = x.UsuarioId,
-                    Nombre = x.NombreCompleto,
-                    Nivel = x.Nivel,
-                    CodigoReferencia = x.CodigoReferencia,
-                    Referidos = new List<UsuarioReferidoViewModel>()
-                });
-
-            UsuarioReferidoViewModel? root = null;
-
-            // Construimos la jerarquía
-            foreach (var item in listRed)
-            {
-                if (item.UsuarioId == item.ReferenteID)
-                {
-                    // Es el nodo raíz (ej. Apoyo)
-                    root = diccionarioUsuarios[item.UsuarioId];
-                }
-                else if (diccionarioUsuarios.ContainsKey(item.ReferenteID))
-                {
-                    // Se lo agregamos a su referente
-                    diccionarioUsuarios[item.ReferenteID].Referidos.Add(diccionarioUsuarios[item.UsuarioId]);
-                }
-            }
-
-            return root!;
-
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-
 
 
     }
