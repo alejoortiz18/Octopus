@@ -44,45 +44,54 @@
 
 @section Scripts {
     <script>
-        async function toggleReferidosDinamico(usuarioId, nivel, btn) {
+        async function toggleReferidosDinamico(usuarioId, nivelOrBtn, btnMaybe) {
           const maxLevel = 4;
-          const currRow = document.querySelector(`#nivel-${nivel} .row`);
-          const nextLevel = nivel + 1;
-          const isHiding = btn.innerText === 'OCULTAR REFERIDOS';
+          let nivel, btn;
+
+          // --- Determinar qué opción usamos ---
+          if (typeof nivelOrBtn === 'number') {
+            // Opción A: recibimos (usuarioId, nivel, btn)
+            nivel = nivelOrBtn;
+            btn    = btnMaybe;
+          } else {
+            // Opción B: recibimos (usuarioId, btn)
+            btn    = nivelOrBtn;
+            // sacamos el nivel del contenedor padre cuyo id es "nivel-X"
+            const cont = btn.closest('[id^="nivel-"]');
+            nivel = parseInt(cont.id.split('-')[1], 10);
+          }
+
+          const currLevel = nivel;
+          const nextLevel = currLevel + 1;
+          const currRow   = document.querySelector(`#nivel-${currLevel} .row`);
+          const isHiding  = btn.innerText === 'OCULTAR REFERIDOS';
+
+          // 1) Limpiar TODOS los niveles a partir de nextLevel
+          for (let lv = nextLevel; lv <= maxLevel; lv++) {
+            const row = document.querySelector(`#nivel-${lv} .row`);
+            if (row) row.innerHTML = '';
+          }
 
           if (isHiding) {
-            // 1) Limpiar TODOS los niveles >= nextLevel
-            for (let lv = nextLevel; lv <= maxLevel; lv++) {
-              document.querySelector(`#nivel-${lv} .row`).innerHTML = '';
-            }
-
-            // 2) Restaurar visibilidad de TODOS los hermanos en EL nivel actual
-            currRow
-              .querySelectorAll('.col-6, .col-md-4, .col-lg-2')
-              .forEach(col => {
-                col.style.display = '';
-                const b = col.querySelector('button.btn-outline-danger');
-                if (b) b.innerText = 'VER REFERIDOS';
-              });
-
+            // 2) Restaurar visibilidad de todas las tarjetas en el nivel actual
+            currRow.querySelectorAll('.col-6, .col-md-4, .col-lg-2')
+                   .forEach(col => {
+                     col.style.display = '';
+                     const b = col.querySelector('button');
+                     if (b) b.innerText = 'VER REFERIDOS';
+                   });
             return;
           }
 
+          // 3) Ocultar sólo los hermanos en el mismo nivel
+          const parentCol = btn.closest('.col-6, .col-md-4, .col-lg-2');
+          currRow.querySelectorAll('.col-6, .col-md-4, .col-lg-2')
+                 .forEach(col => {
+                   if (col !== parentCol) col.style.display = 'none';
+                 });
 
-          // 3) Limpiar TODOS los niveles >= nextLevel
-          for (let lv = nextLevel; lv <= maxLevel; lv++) {
-            document.querySelector(`#nivel-${lv} .row`).innerHTML = '';
-          }
-
-          // 4) Ocultar hermanos en nivel actual
-          currRow
-            .querySelectorAll('.col-6, .col-md-4, .col-lg-2')
-            .forEach(col => {
-              if (!col.contains(btn)) col.style.display = 'none';
-            });
-
-          // 5) Traer y pintar hijos en el siguiente nivel
-          const resp = await fetch(`/Home/GetReferidosPartial?usuarioId=${usuarioId}`);
+          // 4) Traer y pintar los hijos en el siguiente nivel
+          const resp = await fetch(`/Home/GetReferidosPartial?usuarioId=${usuarioId}${typeof nivel === 'number' ? `&nivel=${nivel}` : ''}`);
           if (!resp.ok) {
             console.error('Error cargando referidos de usuario', usuarioId);
             return;
@@ -90,11 +99,12 @@
           const html = await resp.text();
           document.querySelector(`#nivel-${nextLevel} .row`).innerHTML = html;
 
-          // 6) Marcar el botón como “OCULTAR”
+          // 5) Marcar el botón como “OCULTAR REFERIDOS”
           btn.innerText = 'OCULTAR REFERIDOS';
         }
     </script>
 }
+
 
 
 

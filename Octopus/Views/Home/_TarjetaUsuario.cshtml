@@ -24,13 +24,13 @@
 
             @if (Model.Referidos.Any())
             {
-                <!-- pasamos el nivel actual como segundo argumento -->
                 <button class="btn btn-sm btn-outline-danger mt-2"
-                        data-nivel="@Model.Nivel"
-                        onclick="toggleReferidosDinamico(@Model.UsuarioId, @Model.Nivel, this)">
+                        onclick="toggleReferidosDinamico(@Model.UsuarioId, this)">
                     VER REFERIDOS
                 </button>
             }
+
+
         </div>
 
     </div>

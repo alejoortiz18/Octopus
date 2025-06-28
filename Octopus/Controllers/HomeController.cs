@@ -43,6 +43,8 @@ namespace Octopus.Controllers
             return View();
         }
 
+      
+
         public IActionResult GetReferidosPartial(int usuarioId, bool isAuthController = false)
         {
             string? userEmail = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
