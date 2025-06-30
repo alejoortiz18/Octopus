@@ -41,6 +41,9 @@ namespace Octopus.Controllers
             string? userEmail = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
 
             Usuario resultUser = _usuarioBusiness.ObtenerPorEmail(userEmail);
+
+
+
             if (primerInicio.Equals(true) && resultUser.ReferenteId == null)
             {
                 ViewData["MensajeReferente"] = UsuarioMsnConstant.CodigoReferenteIsNull;
@@ -49,6 +52,21 @@ namespace Octopus.Controllers
             if (TempData["NoExisteCodigo"] != null && Convert.ToInt32(TempData["NoExisteCodigo"]) == 1)
             {
                 ViewData["NoExisteCodigo"] = UsuarioMsnConstant.CodigoReferenteNoExiste;               
+            }
+
+            if (TempData["mensajeNoReferente"] != "")
+            {
+                string mensaje = TempData["mensajeNoReferente"].ToString();
+
+                if (mensaje == UsuarioMsnConstant.CodigoReferenteNoExiste)
+                {
+                    ViewData["mensajeNoReferente"] = UsuarioMsnConstant.CodigoReferenteNoExiste;
+                }
+                else if (mensaje == UsuarioMsnConstant.CodigoReferenteLleno)
+                {
+                    ViewData["mensajeNoReferente"] = UsuarioMsnConstant.CodigoReferenteLleno;
+                }
+                TempData["mensajeNoReferente"] = "";
             }
 
 
@@ -106,6 +124,22 @@ namespace Octopus.Controllers
             bool registrado = false;
             if (model.ActualizarDatosPersonales)
             {
+                string resultValidar = ValidarRedReferidos(model.DatosPersonales.CodigoReferente);
+                if (resultValidar != "")
+                {
+                    if (resultValidar == UsuarioMsnConstant.CodigoReferenteNoExiste)
+                    {
+                        TempData["mensajeNoReferente"] = UsuarioMsnConstant.CodigoReferenteNoExiste;
+                        return RedirectToAction("Profile");
+                    }
+                    else if (resultValidar == UsuarioMsnConstant.CodigoReferenteLleno)
+                    {
+                        TempData["mensajeNoReferente"] = UsuarioMsnConstant.CodigoReferenteLleno;
+                        return RedirectToAction("Profile");
+                    }
+                    TempData["mensajeNoReferente"] = "";
+                }
+
                 bool ingresoCodigo = true;
                 if (model.DatosPersonales.CodigoReferente ==null)
                 {
@@ -177,7 +211,23 @@ namespace Octopus.Controllers
 
         }
 
+        private string ValidarRedReferidos(string codigo)
+        {
+            var usuario = _usuarioBusiness.ObtenerPorCodigoReferencia(codigo);
+            if (usuario == null)
+            {
+                return UsuarioMsnConstant.CodigoReferenteNoExiste;
+            }
+            var red = _redReferidoBusiness.GetTodaLaRedPorUsuarioIdAsync(usuario.UsuarioId);
+            if (red.Count >= 5)
+            {
+                return UsuarioMsnConstant.CodigoReferenteLleno;
+            }
+            else
+            {
+                return "";
+            }
+        }
 
-       
     }
 }
