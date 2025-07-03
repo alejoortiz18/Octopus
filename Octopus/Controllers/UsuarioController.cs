@@ -34,7 +34,8 @@ namespace Octopus.Controllers
             _redReferidoBusiness = red;
         }
 
-        public IActionResult Profile(bool? primerInicio =false)
+        [Route("mi-perfil")]
+        public IActionResult Profile(bool? primerInicio =false, string? mensajeNoReferente = null)
         {
             
             
@@ -54,9 +55,9 @@ namespace Octopus.Controllers
                 ViewData["NoExisteCodigo"] = UsuarioMsnConstant.CodigoReferenteNoExiste;               
             }
 
-            if (TempData["mensajeNoReferente"] != "")
+            if (mensajeNoReferente != null)
             {
-                string mensaje = TempData["mensajeNoReferente"].ToString();
+                string mensaje = mensajeNoReferente;
 
                 if (mensaje == UsuarioMsnConstant.CodigoReferenteNoExiste)
                 {
@@ -121,6 +122,7 @@ namespace Octopus.Controllers
         public IActionResult ActualizarPerfil(PerfilUsuarioViewModel model)
         {
             Usuario resultUsuario = _usuarioBusiness.ObtenerPorId(model.UsuarioId);
+            string mensajeNoReferente = null;
             bool registrado = false;
             if (model.ActualizarDatosPersonales)
             {
@@ -129,15 +131,22 @@ namespace Octopus.Controllers
                 {
                     if (resultValidar == UsuarioMsnConstant.CodigoReferenteNoExiste)
                     {
-                        TempData["mensajeNoReferente"] = UsuarioMsnConstant.CodigoReferenteNoExiste;
-                        return RedirectToAction("Profile");
+                        mensajeNoReferente = UsuarioMsnConstant.CodigoReferenteNoExiste;
+                        return RedirectToAction(nameof(Profile), new
+                        {
+                            primerInicio = (bool?)false,   // cast opcional si prefieres que sea explícito
+                            mensajeNoReferente             // C# 7+: la propiedad toma este mismo nombre
+                        });
                     }
                     else if (resultValidar == UsuarioMsnConstant.CodigoReferenteLleno)
                     {
-                        TempData["mensajeNoReferente"] = UsuarioMsnConstant.CodigoReferenteLleno;
-                        return RedirectToAction("Profile");
+                        mensajeNoReferente = UsuarioMsnConstant.CodigoReferenteLleno;
+                        return RedirectToAction(nameof(Profile), new
+                        {
+                            primerInicio = (bool?)false,   // cast opcional si prefieres que sea explícito
+                            mensajeNoReferente             // C# 7+: la propiedad toma este mismo nombre
+                        });
                     }
-                    TempData["mensajeNoReferente"] = "";
                 }
 
                 bool ingresoCodigo = true;

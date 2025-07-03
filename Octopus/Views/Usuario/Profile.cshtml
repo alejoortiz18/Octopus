@@ -418,7 +418,7 @@
                             @section Scripts {
                                 <script>
                                     document.addEventListener("DOMContentLoaded", function () {
-                                        var form = document.getElementById('perfilForm');
+                                        var form = document.querySelector('form'); // Ajustado para que sea el formulario real
                                         var codigoReferenciaInput = document.getElementById('codigoReferenteInput');
                                         var modal = new bootstrap.Modal(document.getElementById('codigoReferenciaModal'));
                                         var confirmarBtn = document.getElementById('confirmarCodigoReferencia');
@@ -430,8 +430,26 @@
                                                 submitAllowed = false;
                                                 return true;
                                             }
-                                            var valor = codigoReferenciaInput ? codigoReferenciaInput.value.trim() : '';
-                                            if (!valor) {
+
+                                            var mostrarModal = false;
+
+                                            // Buscar el <tr> que contiene el input
+                                            var trActual = codigoReferenciaInput.closest('tr');
+                                            var trSiguiente = trActual ? trActual.nextElementSibling : null;
+
+                                            if (trSiguiente) {
+                                                // Revisar si hay algún <input> dentro del siguiente <tr> con valor
+                                                var inputs = trSiguiente.querySelectorAll('input, select, textarea');
+                                                var hayDatos = Array.from(inputs).some(function (input) {
+                                                    return input.value.trim() !== '';
+                                                });
+
+                                                if (!hayDatos) {
+                                                    mostrarModal = true;
+                                                }
+                                            }
+
+                                            if (mostrarModal) {
                                                 e.preventDefault();
                                                 modal.show();
                                             }
