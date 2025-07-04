@@ -98,56 +98,61 @@ namespace Octopus.Controllers
             return null;
         }
 
-      
+
 
         private UsuarioReferidoViewModel GenerarRed(Usuario usuarioRoot)
         {
-            // 1) Trae todos los DTOs de referidos
-            List<RedPorReferidosByIdUsuarioDto> listRed =
-                _redBusiness.GetTodaLaRedPorUsuarioIdAsync(usuarioRoot.UsuarioId);
+            var listRed = _redBusiness.GetTodaLaRedPorUsuarioIdAsync(usuarioRoot.UsuarioId);
 
-            // 2) Crea el nodo raíz (el usuario que inició la consulta)
-            var root = new UsuarioReferidoViewModel
+            // Agrupar por ReferenteID
+            var hijosPorReferente = listRed
+                .GroupBy(x => x.ReferenteID)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            // Diccionario para evitar duplicados
+            var nodosCreados = new Dictionary<int, UsuarioReferidoViewModel>();
+
+            UsuarioReferidoViewModel CrearNodo(int usuarioId, int nivel)
             {
-                UsuarioId = usuarioRoot.UsuarioId,
-                Nombre = usuarioRoot.NombreCompleto,
-                Nivel = 0,
-                CodigoReferencia = usuarioRoot.CodigoReferencia,
-                Referidos = new List<UsuarioReferidoViewModel>()
-            };
+                // Si ya se creó este usuario, lo retornamos directamente (evita duplicados)
+                if (nodosCreados.TryGetValue(usuarioId, out var existente))
+                    return existente;
 
-            // 3) Crea diccionario de “Id de usuario” → “VM del referido”
-            var diccionario = listRed
-                .ToDictionary(
-                   x => x.UsuarioId,
-                   x => new UsuarioReferidoViewModel
-                   {
-                       UsuarioId = x.UsuarioId,
-                       Nombre = x.NombreCompleto,
-                       Nivel = x.Nivel,
-                       CodigoReferencia = x.CodigoReferencia,
-                       Referidos = new List<UsuarioReferidoViewModel>()
-                   });
+                RedPorReferidosByIdUsuarioDto? datos = listRed.FirstOrDefault(x => x.UsuarioId == usuarioId);
 
-            // 4) Agrega **directos** al root
-            foreach (var dto in listRed.Where(x => x.ReferenteID == usuarioRoot.UsuarioId))
-            {
-                root.Referidos.Add(diccionario[dto.UsuarioId]);
-            }
+                // Si no existe en la lista (caso especial: root), usamos el root
+                string nombre = datos?.NombreCompleto ?? usuarioRoot.NombreCompleto;
+                string codigo = datos?.CodigoReferencia ?? usuarioRoot.CodigoReferencia;
 
-            // 5) Construye el resto del árbol (nietos, biznietos...)
-            foreach (var dto in listRed.Where(x => x.ReferenteID != usuarioRoot.UsuarioId))
-            {
-                if (diccionario.ContainsKey(dto.ReferenteID))
+                var nodo = new UsuarioReferidoViewModel
                 {
-                    diccionario[dto.ReferenteID]
-                        .Referidos
-                        .Add(diccionario[dto.UsuarioId]);
+                    UsuarioId = usuarioId,
+                    Nombre = nombre,
+                    Nivel = nivel,
+                    CodigoReferencia = codigo,
+                    Referidos = new List<UsuarioReferidoViewModel>()
+                };
+
+                nodosCreados[usuarioId] = nodo;
+
+                if (hijosPorReferente.TryGetValue(usuarioId, out var hijos))
+                {
+                    foreach (var hijo in hijos)
+                    {
+                        if (!nodosCreados.ContainsKey(hijo.UsuarioId))
+                        {
+                            var hijoNodo = CrearNodo(hijo.UsuarioId, nivel + 1);
+                            nodo.Referidos.Add(hijoNodo);
+                        }
+                    }
                 }
+
+                return nodo;
             }
 
-            return root;
+            return CrearNodo(usuarioRoot.UsuarioId, 0);
         }
+
 
         private Usuario ValidarEstadoPerfil()
         {
