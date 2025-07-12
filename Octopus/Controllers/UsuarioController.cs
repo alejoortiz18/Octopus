@@ -228,7 +228,8 @@ namespace Octopus.Controllers
                 return UsuarioMsnConstant.CodigoReferenteNoExiste;
             }
             var red = _redReferidoBusiness.GetTodaLaRedPorUsuarioIdAsync(usuario.UsuarioId);
-            if (red.Count >= 5)
+            var usuariosDirectos = red.Where(x => x.ReferenteID == usuario.UsuarioId).ToList();
+            if (usuariosDirectos.Count >= 5)
             {
                 return UsuarioMsnConstant.CodigoReferenteLleno;
             }
