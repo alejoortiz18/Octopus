@@ -18,8 +18,8 @@ namespace Data.Dependences
             services.AddScoped<IBancosRepository, BancoRepository>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IRedRepository, RedRepository>();
-            //services.AddScoped<INadadorXEntrenadorRepository, NadadorXEntrenadorRepository>();
-            //services.AddScoped<IUsuarioXSesionRepository, UsuarioXSesionRepository>();
+            services.AddScoped<IComisionRepository, ComisionRepository>();
+            services.AddScoped<IConfiguracionSistemaRepositorio, ConfiguracionSistemaRepositorio>();
             //services.AddScoped<ITipoEntrenamientoRepository, TipoEntrenamientoRepository>();
             //services.AddScoped<IPerfilRepository, PerfilRepository>();
             //
