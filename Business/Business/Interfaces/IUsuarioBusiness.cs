@@ -16,7 +16,7 @@ namespace Business.Interfaces
         Usuario ObtenerPorId(int Id);
         Usuario ObtenerCuentaApoyo();
         Task<bool> ActualizarUsuarioAsync(Usuario usuario);
-        public Task<bool> ActualizarUsuarioAsync(DatosPersonalesUsuarioDto usuario);
+        public Task<bool> ActualizarUsuarioAsync(DatosPersonalesUsuarioDto usuario, int? usuairoID = 0);
         bool ReenviarCodigo(EnabledUserDto modelUser);
         bool Save(Usuario usuario);
     }
